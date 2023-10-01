@@ -8,5 +8,3 @@ export const APP_VERSION = "latest";
 
 export const APP_AUTHOR_NAME = "Star Inc.";
 export const APP_AUTHOR_URL = "https://starinc.xyz";
-
-export const OPENAPI_EXPORTED_FILENAME = "openapi_exported.json";
