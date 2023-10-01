@@ -2,16 +2,16 @@
 // The solution to defense from brute-force attacks,
 
 // Import isProduction
-const {isProduction} = require("../config");
+import {isProduction} from "../config.mjs";
 
 // Import StatusCodes
-const {StatusCodes} = require("http-status-codes");
+import {StatusCodes} from "http-status-codes";
 
 // Import useCache
-const {useCache} = require("../init/cache");
+import {useCache} from "../init/cache.mjs";
 
 // Import getIPAddress
-const {getIPAddress} = require("../utils/visitor");
+import {getIPAddress} from "../utils/visitor.mjs";
 
 /**
  * Get path key from request.
@@ -30,10 +30,11 @@ function getPathKey(req, isParam) {
 }
 
 // Export (function)
-// max is the maximum number of requests allowed every IP addresss.
-// ttl is the seconds to unblock the IP address if there no request comes.
-// if ttl set as 0, it will be blocked forever until the software restarted.
-module.exports = (max, ttl, isParam) => (req, res, next) => {
+// max is the maximum number of requests allowed for every IP address.
+// ttl is the seconds to unblock the IP address if there is no request.
+// If ttl is set as 0,
+// it will be blocked forever until the software is restarted.
+export default (max, ttl, isParam) => (req, res, next) => {
     const pathKey = getPathKey(req, isParam);
     const visitorKey = getIPAddress(req);
     const queryKey = ["restrictor", pathKey, visitorKey].join(":");

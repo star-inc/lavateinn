@@ -2,13 +2,13 @@
 // Redirect http to https.
 
 // Import isProduction
-const {isProduction} = require("../config");
+import {isProduction} from "../config.mjs";
 
 // Import StatusCodes
-const {StatusCodes} = require("http-status-codes");
+import {StatusCodes} from "http-status-codes";
 
 // Export (function)
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
     if (req.protocol === "http") {
         if (!isProduction()) {
             // Debug message

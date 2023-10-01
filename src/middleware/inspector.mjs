@@ -1,18 +1,18 @@
 "use strict";
 // Interrupt the request
-// which is not satisfied the result from express-validator.
+// which is not satisfied with the result from express-validator.
 
 // Import isProduction
-const {isProduction} = require("../config");
+import {isProduction} from "../config.mjs";
 
 // Import StatusCodes
-const {StatusCodes} = require("http-status-codes");
+import {StatusCodes} from "http-status-codes";
 
-// Import validatorResult
-const {validationResult} = require("express-validator");
+// Import validationResult
+import {validationResult} from "express-validator";
 
 // Export (function)
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
     const errors = validationResult(req);
     if (errors.isEmpty()) {
         next();
@@ -24,8 +24,8 @@ module.exports = (req, res, next) => {
                 errors,
             );
         }
-        res.
-            status(StatusCodes.BAD_REQUEST).
-            json({errors: errors.array()});
+        res
+            .status(StatusCodes.BAD_REQUEST)
+            .mjson({errors: errors.array()});
     }
 };

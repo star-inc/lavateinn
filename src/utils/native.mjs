@@ -7,7 +7,7 @@
  * @function
  * @return {number}
  */
-function getPosixTimestamp() {
+export function getPosixTimestamp() {
     return Math.floor(new Date().getTime() / 1000);
 }
 
@@ -19,12 +19,6 @@ function getPosixTimestamp() {
  * @param {string} propName
  * @return {boolean}
  */
-function isObjectPropExists(srcObject, propName) {
+export function isObjectPropExists(srcObject, propName) {
     return Object.prototype.hasOwnProperty.call(srcObject, propName);
 }
-
-// Export (object)
-module.exports = {
-    getPosixTimestamp,
-    isObjectPropExists,
-};

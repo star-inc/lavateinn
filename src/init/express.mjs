@@ -2,46 +2,42 @@
 // express.js is a web framework.
 
 // Import config
-const {getEnabled} = require("../config");
-
-// Import express.js
-const express = require("express");
+import {getEnabled} from "../config.mjs";
+import express from "express";
 
 // Initialize app engine
 const app = express();
 
 // Create middleware handlers
-const middlewareRequestIp = require("request-ip").mw();
-const middlewareAuth = require("../middleware/auth");
-
-// Register global middleware
-app.use(middlewareRequestIp);
-app.use(middlewareAuth);
+import requestIpMiddleware from "request-ip";
+import middlewareHttpsRedirect from "../middleware/https_redirect.mjs";
+import middlewareCORS from "../middleware/cors.mjs";
+import middlewareOrigin from "../middleware/origin.mjs";
 
 // Read config
 const isEnabledRedirectHttpHttps = getEnabled("ENABLED_REDIRECT_HTTP_HTTPS");
 const isEnabledCors = getEnabled("ENABLED_CORS");
 const isEnabledCorsOriginCheck = getEnabled("ENABLED_CORS_ORIGIN_CHECK");
 
+// Register global middleware
+app.use(requestIpMiddleware.mw());
+
 // Optional middleware
 if (isEnabledRedirectHttpHttps) {
-    const middlewareHttpsRedirect = require("../middleware/https_redirect");
     // Do https redirects
     app.use(middlewareHttpsRedirect);
 }
 if (isEnabledCors) {
-    const middlewareCORS = require("../middleware/cors");
     // Do CORS handles
     app.use(middlewareCORS);
 }
 if (isEnabledCors && isEnabledCorsOriginCheck) {
-    const middlewareOrigin = require("../middleware/origin");
     // Check header "Origin" for CORS
     app.use(middlewareOrigin);
 }
 
 // Export useFunction
-exports.useApp = () => app;
+export const useApp = () => app;
 
 // Export express for shortcut
-exports.express = express;
+export {express};

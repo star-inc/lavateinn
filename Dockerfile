@@ -1,8 +1,8 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
 ENV RUNTIME_ENV container
 
-RUN adduser -u 3000 -D recv
+RUN adduser -u 3000 -D flandre
 
 RUN mkdir -p /.npm /workplace
 WORKDIR /workplace

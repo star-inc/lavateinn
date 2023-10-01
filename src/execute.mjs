@@ -1,12 +1,12 @@
 "use strict";
 
 // Import config
-const {getMust, getSplited} = require("./config");
+import {getMust, getSplited} from "./config.mjs";
 
 // Import modules
-const fs = require("node:fs");
-const http = require("node:http");
-const https = require("node:https");
+import {promises as fs} from "node:fs";
+import http from "node:http";
+import https from "node:https";
 
 /**
  * Setup protocol - http
@@ -26,10 +26,10 @@ function setupHttpProtocol(app, callback) {
  * @param {object} app
  * @param {function} callback
  */
-function setupHttpsProtocol(app, callback) {
+async function setupHttpsProtocol(app, callback) {
     const options = {
-        key: fs.readFileSync(getMust("HTTPS_KEY_PATH")),
-        cert: fs.readFileSync(getMust("HTTPS_CERT_PATH")),
+        key: await fs.readFile(getMust("HTTPS_KEY_PATH")),
+        cert: await fs.readFile(getMust("HTTPS_CERT_PATH")),
     };
     const httpsServer = https.createServer(options, app);
     const port = parseInt(getMust("HTTPS_PORT"));
@@ -37,8 +37,13 @@ function setupHttpsProtocol(app, callback) {
     callback({protocol: "https", hostname: getMust("HTTPS_HOSTNAME"), port});
 }
 
-// Prepare application and detect protocols automatically
-module.exports = async function(app, prepareHandlers, callback) {
+/**
+ * Prepare application and detect protocols automatically
+ * @param {object} app
+ * @param {array} prepareHandlers
+ * @param {function} callback
+ */
+export default async function execute(app, prepareHandlers, callback) {
     // Waiting for prepare handlers
     if (prepareHandlers.length > 0) {
         const preparingPromises = prepareHandlers.map((c) => c());
@@ -57,4 +62,4 @@ module.exports = async function(app, prepareHandlers, callback) {
     if (enabledProtocols.includes("https")) {
         setupHttpsProtocol(app, callback);
     }
-};
+}

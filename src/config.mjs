@@ -1,14 +1,13 @@
 "use strict";
 
-// Import modules
-const {join: pathJoin} = require("node:path");
-const {existsSync} = require("node:fs");
+import {existsSync} from "node:fs";
+import dotenv from "dotenv";
 
 /**
  * Load configs from system environment variables.
  */
-function runLoader() {
-    const dotenvPath = pathJoin(__dirname, "..", ".env");
+export function runLoader() {
+    const dotenvPath = new URL("../.env", import.meta.url);
 
     const isDotEnvFileExists = existsSync(dotenvPath);
     const isCustomDefined = get("APP_CONFIGURED") === "1";
@@ -23,7 +22,7 @@ function runLoader() {
         throw new Error(".env not exists");
     }
 
-    require("dotenv").config();
+    dotenv.config();
 }
 
 /**
@@ -32,7 +31,7 @@ function runLoader() {
  * @function
  * @return {boolean} true if production
  */
-function isProduction() {
+export function isProduction() {
     return getMust("NODE_ENV") === "production";
 }
 
@@ -42,7 +41,7 @@ function isProduction() {
  * @function
  * @return {object}
  */
-function getEnvironmentOverview() {
+export function getEnvironmentOverview() {
     return {
         node: getFallback("NODE_ENV", "development"),
         runtime: getFallback("RUNTIME_ENV", "native"),
@@ -56,7 +55,7 @@ function getEnvironmentOverview() {
  * @param {string} key the key
  * @return {string} the value
  */
-function get(key) {
+export function get(key) {
     return process.env[key];
 }
 
@@ -67,7 +66,7 @@ function get(key) {
  * @param {string} key the key
  * @return {bool} the bool value
  */
-function getEnabled(key) {
+export function getEnabled(key) {
     return getMust(key) === "yes";
 }
 
@@ -79,10 +78,10 @@ function getEnabled(key) {
  * @param {string} separator [separator=,] the separator.
  * @return {array} the array value
  */
-function getSplited(key, separator=",") {
-    return getMust(key).
-        split(separator).
-        map((s) => s.trim());
+export function getSplited(key, separator = ",") {
+    return getMust(key)
+        .split(separator)
+        .map((s) => s.trim());
 }
 
 /**
@@ -93,7 +92,7 @@ function getSplited(key, separator=",") {
  * @return {string} the expected value
  * @throws {Error} if value is undefined, throw an error
  */
-function getMust(key) {
+export function getMust(key) {
     const value = get(key);
     if (value === undefined) {
         throw new Error(`config key ${key} is undefined`);
@@ -109,17 +108,6 @@ function getMust(key) {
  * @param {string} fallback the fallback value
  * @return {string} the expected value
  */
-function getFallback(key, fallback) {
+export function getFallback(key, fallback) {
     return get(key) || fallback;
 }
-
-module.exports = {
-    runLoader,
-    isProduction,
-    getEnvironmentOverview,
-    get,
-    getEnabled,
-    getSplited,
-    getMust,
-    getFallback,
-};

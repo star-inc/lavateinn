@@ -20,6 +20,7 @@
     "browser": false
   },
   "parserOptions": {
-    "ecmaVersion": 2021
+    "sourceType": "module",
+    "ecmaVersion": 2023
   }
 }

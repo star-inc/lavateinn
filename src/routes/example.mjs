@@ -1,22 +1,20 @@
 "use strict";
 
 // Import config
-const {getEnvironmentOverview} = require("../config");
+import {getEnvironmentOverview} from "../config.mjs";
 
 // Import modules
-const {StatusCodes} = require("http-status-codes");
+import {StatusCodes} from "http-status-codes";
 
 // Import useApp, express
-const {useApp, express} = require("../init/express");
+import {useApp, express} from "../init/express.mjs";
 
-const utilVisitor = require("../utils/visitor");
-const utilNative = require("../utils/native");
-const utilTestToken = require("../utils/test_token");
+import * as utilVisitor from "../utils/visitor.mjs";
+import * as utilNative from "../utils/native.mjs";
 
-const middlewareValidator = require("express-validator");
-const middlewareAccess = require("../middleware/access");
-const middlewareInspector = require("../middleware/inspector");
-const middlewareRestrictor = require("../middleware/restrictor");
+import middlewareValidator from "express-validator";
+import middlewareInspector from "../middleware/inspector.mjs";
+import middlewareRestrictor from "../middleware/restrictor.mjs";
 
 // Create router
 const {Router: newRouter} = express;
@@ -112,81 +110,6 @@ router.get("/empty",
 
 /**
  * @openapi
- * /example/tester:
- *   get:
- *     tags:
- *       - example
- *     summary: Get test user's token and identity
- *     description: Request to generate test user's token and
- *                  profile with optional role field.
- *     parameters:
- *       - in: query
- *         name: role
- *         schema:
- *           type: string
- *         required: false
- *         description: The role you hope to own, default is empty.
- *     responses:
- *       200:
- *         description: Returns current visitor information.
- */
-router.get("/tester", (req, res) => {
-    const tester = utilTestToken.newProfile();
-    if (utilNative.isObjectPropExists(req.query, "role")) {
-        Array.prototype.push.call(tester.roles, req.query.role);
-    }
-    const tokenString = utilTestToken.issue(tester);
-    const token = `TEST ${tokenString}`;
-    res.send({token, tester});
-});
-
-/**
- * @openapi
- * /example/auth:
- *   get:
- *     tags:
- *       - example
- *     summary: Get auth information
- *     description: Example to test middlewareAuth works.
- *     security:
- *       - ApiKeyAuth: []
- *     responses:
- *       200:
- *         description: Returns current visitor's auth information.
- *       401:
- *         description: Returns "Unauthorized"
- *                      if your token is empty or invalid.
- */
-router.get("/auth", (req, res) => {
-    res.send(req.auth);
-});
-
-/**
- * @openapi
- * /example/admin:
- *   get:
- *     tags:
- *       - example
- *     summary: Test access information
- *     description: Example to check admin role with middlewareAccess.
- *     security:
- *       - ApiKeyAuth: []
- *     responses:
- *       200:
- *         description: Returns a hello-world message and admin's identity.
- *       401:
- *         description: Returns "Unauthorized"
- *                      if your token is empty or invalid.
- */
-router.get("/admin", middlewareAccess("admin"), (req, res) => {
-    res.send({
-        "message": "Hello, Admin!",
-        "user_id": req.auth.id,
-    });
-});
-
-/**
- * @openapi
  * /example/guess/{code}:
  *   get:
  *     tags:
@@ -220,7 +143,7 @@ router.get("/guess/:code",
 );
 
 // Export routes mapper (function)
-module.exports = () => {
+export default () => {
     // Use application
     const app = useApp();
 

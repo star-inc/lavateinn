@@ -1,19 +1,19 @@
 "use strict";
-// Check the header "Origin" in request is equal to CORS_ORIGIN,
+// Check the header "Origin" in the request is equal to CORS_ORIGIN,
 // if not, interrupt it.
 
 // Import config
-const {isProduction, getMust, getEnabled} = require("../config");
+import {isProduction, getMust} from "../config.mjs";
 
 // Import StatusCodes
-const {StatusCodes} = require("http-status-codes");
+import {StatusCodes} from "http-status-codes";
 
 // Import isObjectPropExists
-const {isObjectPropExists} = require("../utils/native");
+import {isObjectPropExists} from "../utils/native.mjs";
 
 // Export (function)
-module.exports = (req, res, next) => {
-    // Check the request is CORS
+export default (req, res, next) => {
+    // Check if the request has CORS origin header
     if (!isObjectPropExists(req.headers, "origin")) {
         if (!isProduction()) {
             // Debug message
@@ -23,7 +23,7 @@ module.exports = (req, res, next) => {
         return;
     }
 
-    // Get URLs
+    // Get actual and expected URLs
     const actualUrl = req.header("origin");
     const expectedUrl = getMust("CORS_ORIGIN");
 
@@ -33,24 +33,6 @@ module.exports = (req, res, next) => {
             // Debug message
             console.warn(
                 "CORS origin header match:",
-                `actual "${actualUrl}"`,
-                `expected "${expectedUrl}"`,
-            );
-        }
-        next();
-        return;
-    }
-
-    // Get URLs
-    const isEnabledSwagger = getEnabled("ENABLED_SWAGGER");
-    const expectedSwaggerUrl = getMust("SWAGGER_CORS_ORIGIN");
-
-    // Origin from Swagger match
-    if (isEnabledSwagger && actualUrl === expectedSwaggerUrl) {
-        if (!isProduction()) {
-            // Debug message
-            console.warn(
-                "CORS origin header from Swagger match:",
                 `actual "${actualUrl}"`,
                 `expected "${expectedUrl}"`,
             );
