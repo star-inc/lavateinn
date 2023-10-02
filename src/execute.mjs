@@ -1,7 +1,10 @@
 "use strict";
 
 // Import config
-import {getMust, getSplited} from "./config.mjs";
+import {
+    getMust,
+    getSplited,
+} from "./config.mjs";
 
 // Import modules
 import http from "node:http";
@@ -36,11 +39,14 @@ async function setupHttpsProtocol(app, callback) {
     const hostname = getMust("HTTPS_HOSTNAME");
     const port = parseInt(getMust("HTTPS_PORT"));
 
-    const key = await readFile(getMust("HTTPS_KEY_PATH"));
-    const cert = await readFile(getMust("HTTPS_CERT_PATH"));
+    const [key, cert] = await Promise.all([
+        readFile(getMust("HTTPS_KEY_PATH")),
+        readFile(getMust("HTTPS_CERT_PATH")),
+    ]);
 
     const httpsServer = https.createServer({key, cert}, app);
     httpsServer.listen(port, hostname);
+
     callback({protocol, hostname, port});
 }
 
