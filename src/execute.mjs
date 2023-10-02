@@ -4,9 +4,12 @@
 import {getMust, getSplited} from "./config.mjs";
 
 // Import modules
-import {promises as fs} from "node:fs";
 import http from "node:http";
 import https from "node:https";
+
+import {
+    readFile,
+} from "node:fs/promises";
 
 /**
  * Setup protocol - http
@@ -14,11 +17,13 @@ import https from "node:https";
  * @param {function} callback
  */
 function setupHttpProtocol(app, callback) {
-    const options = {};
-    const httpServer = http.createServer(options, app);
+    const protocol = "http";
+    const hostname = getMust("HTTP_HOSTNAME");
     const port = parseInt(getMust("HTTP_PORT"));
-    httpServer.listen(port, getMust("HTTP_HOSTNAME"));
-    callback({protocol: "http", hostname: getMust("HTTP_HOSTNAME"), port});
+
+    const httpServer = http.createServer({}, app);
+    httpServer.listen(port, hostname);
+    callback({protocol, hostname, port});
 }
 
 /**
@@ -27,14 +32,16 @@ function setupHttpProtocol(app, callback) {
  * @param {function} callback
  */
 async function setupHttpsProtocol(app, callback) {
-    const options = {
-        key: await fs.readFile(getMust("HTTPS_KEY_PATH")),
-        cert: await fs.readFile(getMust("HTTPS_CERT_PATH")),
-    };
-    const httpsServer = https.createServer(options, app);
+    const protocol = "https";
+    const hostname = getMust("HTTPS_HOSTNAME");
     const port = parseInt(getMust("HTTPS_PORT"));
-    httpsServer.listen(port, getMust("HTTPS_HOSTNAME"));
-    callback({protocol: "https", hostname: getMust("HTTPS_HOSTNAME"), port});
+
+    const key = await readFile(getMust("HTTPS_KEY_PATH"));
+    const cert = await readFile(getMust("HTTPS_CERT_PATH"));
+
+    const httpsServer = https.createServer({key, cert}, app);
+    httpsServer.listen(port, hostname);
+    callback({protocol, hostname, port});
 }
 
 /**
