@@ -21,7 +21,7 @@ import {
 /**
  * Setup protocol - http
  * @param {object} app
- * @return {Promise<object>} status
+ * @return {Promise<object>} the setup status
  */
 function setupHttpProtocol(app) {
     const protocol = "http";
@@ -37,7 +37,7 @@ function setupHttpProtocol(app) {
 /**
  * Setup protocol - https
  * @param {object} app
- * @return {Promise<object>} status
+ * @return {Promise<object>} the setup status
  */
 async function setupHttpsProtocol(app) {
     const protocol = "https";
@@ -57,7 +57,7 @@ async function setupHttpsProtocol(app) {
 
 /**
  * Defines an application invoker.
- * @return {object} The application invoker.
+ * @return {object} the application invoker
  */
 export function invokeApp() {
     return {
@@ -72,8 +72,8 @@ const preparingPromises = [];
 
 /**
  * Load promises to be executed before running the application.
- * @param {...Promise} promises - Promises to load.
- * @return {object} The application invoker.
+ * @param {...Promise} promises the promises to load
+ * @return {object} the application invoker
  */
 function loadPromises(...promises) {
     if (promises.length < 0) {
@@ -86,8 +86,8 @@ function loadPromises(...promises) {
 
 /**
  * Load routes from specified router names.
- * @param {string[]} routerNames - Names of the routers to load.
- * @return {object} The application invoker.
+ * @param {string[]} routerNames the names of the routers to load
+ * @return {object} the application invoker
  */
 function loadRoutes(routerNames) {
     const routeDirectory = new URL("routes/", import.meta.url);
@@ -103,7 +103,7 @@ function loadRoutes(routerNames) {
 
 /**
  * Prepare the application and automatically detect protocols.
- * @return {Promise<array>} A promise that resolves when prepared.
+ * @return {Promise<array>} a promise that resolves when prepared
  */
 async function execute() {
     // Use application
