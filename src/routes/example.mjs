@@ -1,7 +1,7 @@
 "use strict";
 
 // Import config
-import {getEnvironmentOverview} from "../config.mjs";
+import {getOverview} from "../config.mjs";
 
 // Import modules
 import {StatusCodes} from "http-status-codes";
@@ -72,7 +72,7 @@ router.get("/visitor", (req, res) => {
  *         description: Returns the application environment.
  */
 router.get("/env", (_, res) => {
-    res.send(getEnvironmentOverview());
+    res.send(getOverview());
 });
 
 /**

@@ -36,12 +36,12 @@ export function isProduction() {
 }
 
 /**
- * Get environment overview.
+ * Get overview of current environment.
  * @module config
  * @function
  * @return {object}
  */
-export function getEnvironmentOverview() {
+export function getOverview() {
     return {
         node: getFallback("NODE_ENV", "development"),
         runtime: getFallback("RUNTIME_ENV", "native"),
