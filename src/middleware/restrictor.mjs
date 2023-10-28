@@ -1,16 +1,9 @@
-"use strict";
 // The solution to defense from brute-force attacks,
 
-// Import isProduction
+// Import modules
 import {isProduction} from "../config.mjs";
-
-// Import StatusCodes
 import {StatusCodes} from "http-status-codes";
-
-// Import useCache
 import {useCache} from "../init/cache.mjs";
-
-// Import getIPAddress
 import {getIPAddress} from "../utils/visitor.mjs";
 
 /**

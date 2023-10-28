@@ -1,7 +1,6 @@
-"use strict";
 // node-cache is an in-memory cache.
 
-// Import node-cache
+// Import modules
 import NodeCache from "node-cache";
 
 // Initialize node-cache

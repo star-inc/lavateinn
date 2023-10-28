@@ -1,12 +1,9 @@
-"use strict";
-
-// Import config
+// Import modules
 import {
     getMust,
     getSplited,
 } from "./config.mjs";
 
-// Import modules
 import http from "node:http";
 import https from "node:https";
 

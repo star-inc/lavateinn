@@ -1,9 +1,8 @@
-// Import StatusCodes
+// Import modules
 import {
     StatusCodes,
 } from "http-status-codes";
 
-// Import useApp
 import {
     useApp,
 } from "../init/express.mjs";

@@ -1,14 +1,9 @@
-"use strict";
 // Check the header "Origin" in the request is equal to CORS_ORIGIN,
 // if not, interrupt it.
 
-// Import config
+// Import modules
 import {isProduction, getMust} from "../config.mjs";
-
-// Import StatusCodes
 import {StatusCodes} from "http-status-codes";
-
-// Import isObjectPropExists
 import {isObjectPropExists} from "../utils/native.mjs";
 
 // Export (function)

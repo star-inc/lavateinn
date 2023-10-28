@@ -1,5 +1,4 @@
-"use strict";
-
+// Import modules
 import {existsSync} from "node:fs";
 import dotenv from "dotenv";
 

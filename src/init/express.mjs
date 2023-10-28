@@ -1,7 +1,6 @@
-"use strict";
 // express.js is a web framework.
 
-// Import config
+// Import modules
 import {getEnabled} from "../config.mjs";
 import express from "express";
 

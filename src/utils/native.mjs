@@ -1,4 +1,3 @@
-"use strict";
 // The simple toolbox for Node.js
 
 /**

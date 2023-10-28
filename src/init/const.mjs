@@ -1,4 +1,3 @@
-"use strict";
 // Constants
 
 export const APP_NAME = "lavateinn";

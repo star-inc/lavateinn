@@ -1,10 +1,7 @@
-"use strict";
 // Cross-Origin Resource Sharing
 
-// Import config
+// Import modules
 import {getMust} from "../config.mjs";
-
-// Import cors
 import cors from "cors";
 
 // Read config

@@ -1,14 +1,9 @@
-"use strict";
 // Interrupt the request
 // which is not satisfied with the result from express-validator.
 
-// Import isProduction
+// Import modules
 import {isProduction} from "../config.mjs";
-
-// Import StatusCodes
 import {StatusCodes} from "http-status-codes";
-
-// Import validationResult
 import {validationResult} from "express-validator";
 
 // Export (function)

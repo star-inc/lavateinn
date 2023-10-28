@@ -1,10 +1,7 @@
-"use strict";
 // Redirect http to https.
 
-// Import isProduction
+// Import modules
 import {isProduction} from "../config.mjs";
-
-// Import StatusCodes
 import {StatusCodes} from "http-status-codes";
 
 // Export (function)

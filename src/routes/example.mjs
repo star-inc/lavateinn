@@ -1,12 +1,6 @@
-"use strict";
-
-// Import config
-import {getOverview} from "../config.mjs";
-
 // Import modules
+import {getOverview} from "../config.mjs";
 import {StatusCodes} from "http-status-codes";
-
-// Import useApp, express
 import {useApp, express} from "../init/express.mjs";
 
 import * as utilVisitor from "../utils/visitor.mjs";
