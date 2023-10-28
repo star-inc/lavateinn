@@ -4,9 +4,6 @@
 import {getEnabled} from "../config.mjs";
 import express from "express";
 
-// Initialize app engine
-const app = express();
-
 // Create middleware handlers
 import requestIpMiddleware from "request-ip";
 import middlewareHttpsRedirect from "../middleware/https_redirect.mjs";
@@ -17,6 +14,9 @@ import middlewareOrigin from "../middleware/origin.mjs";
 const isEnabledRedirectHttpHttps = getEnabled("ENABLED_REDIRECT_HTTP_HTTPS");
 const isEnabledCors = getEnabled("ENABLED_CORS");
 const isEnabledCorsOriginCheck = getEnabled("ENABLED_CORS_ORIGIN_CHECK");
+
+// Initialize app engine
+const app = express();
 
 // Register global middleware
 app.use(requestIpMiddleware.mw());
