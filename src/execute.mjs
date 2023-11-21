@@ -69,10 +69,10 @@ const preparingPromises = [];
 
 /**
  * Load promises to be executed before running the application.
- * @param {...Promise} promises the promises to load
+ * @param {Promise[]} promises the promises to load
  * @return {object} the application invoker
  */
-function loadPromises(...promises) {
+function loadPromises(promises) {
     if (promises.length < 0) {
         return invokeApp();
     }
