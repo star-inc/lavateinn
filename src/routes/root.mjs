@@ -19,7 +19,7 @@ export default () => {
         <a href="https://github.com/star-inc/lavateinn" target="_blank">
             https://github.com/star-inc/lavateinn
         </a>
-    `;
+        `;
         res.status(StatusCodes.IM_A_TEAPOT).send(meetMessage);
     });
 
