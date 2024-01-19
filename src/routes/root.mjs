@@ -12,7 +12,7 @@ export default () => {
     // Use application
     const app = useApp();
 
-    // Redirect / to INDEX_REDIRECT_URL
+    // API Index Message
     app.get("/", (_, res) => {
         const meetMessage = `
         Star Inc. Lavateinn Framework <br />
