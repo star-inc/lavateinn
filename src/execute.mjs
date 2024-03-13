@@ -73,7 +73,7 @@ const preparingPromises = [];
  * @return {object} the application invoker
  */
 function loadPromises(promises) {
-    if (promises.length < 0) {
+    if (promises.length < 1) {
         return invokeApp();
     }
 
