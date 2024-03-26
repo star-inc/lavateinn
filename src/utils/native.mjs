@@ -19,5 +19,5 @@ export function getPosixTimestamp() {
  * @return {boolean}
  */
 export function isObjectPropExists(srcObject, propName) {
-    return Object.prototype.hasOwnProperty.call(srcObject, propName);
+    return Object.hasOwn(srcObject, propName);
 }
