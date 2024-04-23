@@ -3,7 +3,7 @@
 Tiny microservice framework with flexible.
 
 This is a microservice framework using Node.js + express.js,
-provides the tree to written your service with a tidy and clear structure of project.
+provides the tree to write your service with a tidy and clear structure of project.
 
 The framework is recommended to be used on light payload tasks.
 
