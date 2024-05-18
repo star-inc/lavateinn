@@ -100,7 +100,7 @@ function loadRoutes(routerNames) {
 
 /**
  * Prepare the application and automatically detect protocols.
- * @return {Promise<array>} a promise that resolves when prepared
+ * @return {Promise<void[]>} a promise that resolves when prepared
  */
 async function execute() {
     // Use application

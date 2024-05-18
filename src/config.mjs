@@ -63,7 +63,7 @@ export function get(key) {
  * @module config
  * @function
  * @param {string} key the key
- * @return {bool} the bool value
+ * @return {boolean} the bool value
  */
 export function getEnabled(key) {
     return getMust(key) === "yes";
@@ -75,7 +75,7 @@ export function getEnabled(key) {
  * @function
  * @param {string} key the key
  * @param {string} separator [separator=,] the separator.
- * @return {array} the array value
+ * @return {string[]} the array value
  */
 export function getSplited(key, separator = ",") {
     return getMust(key)

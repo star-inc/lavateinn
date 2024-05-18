@@ -12,7 +12,7 @@ import {getIPAddress} from "../utils/visitor.mjs";
  * @function
  * @param {object} req the request
  * @param {boolean} isParam is param mode
- * @return {array}
+ * @return {string}
  */
 function getPathKey(req, isParam) {
     const pathArray = req.originalUrl.split("/").filter((i) => !!i);
