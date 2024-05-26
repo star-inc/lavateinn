@@ -1,4 +1,4 @@
-// The simple toolbox for fetch visitor information from HTTP request.
+// The simple toolbox for fetching visitor information from HTTP request.
 
 /**
  * Get IP Address.
