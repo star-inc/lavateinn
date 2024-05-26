@@ -12,6 +12,10 @@ import {
     invokeApp,
 } from "./src/execute.mjs";
 
+import {
+    exitHandler as tempExitHandler,
+} from "./src/init/temp.mjs";
+
 // Define plugin promises
 const pluginPromises = [
     new Promise((resolve) => {
@@ -24,6 +28,14 @@ const pluginPromises = [
 const routerNames = [
     "root",
     "example",
+];
+
+// Define exit handlers
+const exitHandlers = [
+    tempExitHandler,
+    () => {
+        console.info("The example to handle exit signals.");
+    },
 ];
 
 // Define display
@@ -42,5 +54,6 @@ const displayStatus = (protocolStatus) => {
 invokeApp().
     loadPromises(pluginPromises).
     loadRoutes(routerNames).
+    loadExits(exitHandlers).
     execute().
     then(displayStatus);

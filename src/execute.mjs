@@ -4,6 +4,8 @@ import {
     getSplited,
 } from "./config.mjs";
 
+import process from "node:process";
+
 import http from "node:http";
 import https from "node:https";
 
@@ -64,6 +66,7 @@ export function invokeApp() {
     return {
         loadPromises,
         loadRoutes,
+        loadExits,
         execute,
     };
 }
@@ -101,6 +104,28 @@ function loadRoutes(routerNames) {
     const routerMappers = routeFilenames.map((n) => import(n));
     routerMappers.forEach((c) => c.then((f) => f.default()));
 
+    return invokeApp();
+}
+
+/**
+ * Load exit signal handlers.
+ * @param {object} exitHandlers the exit signal handlers
+ * @return {object} the application invoker
+ */
+function loadExits(exitHandlers) {
+    // Handle exit signals
+    const exitHandler = () => {
+        exitHandlers.forEach((f) => f());
+        process.exit(0);
+    };
+    const exitSignals = [
+        "SIGINT",
+        "SIGTERM",
+        "SIGQUIT",
+    ];
+    exitSignals.forEach((signal) => {
+        process.on(signal, exitHandler);
+    });
     return invokeApp();
 }
 
