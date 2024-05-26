@@ -15,6 +15,10 @@ import {
     useApp,
 } from "./init/express.mjs";
 
+import {
+    camelToSnakeCase,
+} from "./utils/native.mjs";
+
 /**
  * Setup protocol - http
  * @param {object} app
@@ -87,6 +91,8 @@ function loadPromises(promises) {
  * @return {object} the application invoker
  */
 function loadRoutes(routerNames) {
+    routerNames = routerNames.map(camelToSnakeCase);
+
     const routeDirectory = new URL("routes/", import.meta.url);
     const routeFilenames = routerNames.map(
         (n) => new URL(`${n}.mjs`, routeDirectory),
