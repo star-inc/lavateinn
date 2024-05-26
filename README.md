@@ -1,4 +1,4 @@
-# lavateinn
+# Lævateinn (lavateinn)
 
 Tiny microservice framework with flexible.
 
@@ -69,10 +69,12 @@ Example to show current POSIX timestamp.
 
 ### GET /example/now
 
-Get POSIX timestamp
+> Get POSIX timestamp
+
+Example to show current POSIX timestamp.
 
 ### License
 
-lavateinn is the microservice framework with [MIT licensed](LICENSE).
+Lævateinn is the microservice framework with [MIT licensed](LICENSE).
 
 > (c) 2024 [Star Inc.](https://starinc.xyz)
