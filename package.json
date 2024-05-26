@@ -1,7 +1,7 @@
 {
   "name": "lavateinn",
   "version": "1.0.0",
-  "description": "Tiny microservice framework with flexible.",
+  "description": "Tiny and flexible microservice framework for fast development.",
   "author": "Star Inc.",
   "homepage": "https://starinc.xyz",
   "license": "MIT",

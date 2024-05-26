@@ -1,6 +1,6 @@
 # Lævateinn (lavateinn)
 
-Tiny microservice framework with flexible.
+Tiny and flexible microservice framework for fast development.
 
 This is a microservice framework using Node.js + express.js,
 provides the tree to write your service with a tidy and clear structure of project.
