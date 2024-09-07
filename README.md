@@ -73,7 +73,7 @@ Example to show current POSIX timestamp.
 
 Example to show current POSIX timestamp.
 
-### License
+## License
 
 Lævateinn is the microservice framework with [MIT licensed](LICENSE).
 
