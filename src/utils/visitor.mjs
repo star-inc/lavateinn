@@ -1,5 +1,7 @@
 // The simple toolbox for fetching visitor information from HTTP request.
 
+import {isProduction} from "../config.mjs";
+
 /**
  * Get IP Address.
  * @module visitor
@@ -8,7 +10,10 @@
  * @return {string} the IP Address
  */
 export function getIPAddress(req) {
-    return req?.clientIp || req.ip;
+    if (!isProduction()) {
+        return "127.0.0.1";
+    }
+    return req.ip;
 }
 
 /**

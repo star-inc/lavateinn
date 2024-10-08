@@ -78,9 +78,10 @@ export function getEnabled(key) {
  * @return {string[]} the array value
  */
 export function getSplited(key, separator = ",") {
-    return getMust(key)
-        .split(separator)
-        .map((s) => s.trim());
+    return getMust(key).
+        split(separator).
+        filter((s) => s).
+        map((s) => s.trim());
 }
 
 /**
