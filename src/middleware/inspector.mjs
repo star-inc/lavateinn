@@ -11,16 +11,14 @@ export default (req, res, next) => {
     const errors = validationResult(req);
     if (errors.isEmpty()) {
         next();
-    } else {
-        if (!isProduction()) {
-            // Debug message
-            console.warn(
-                "A bad request received:",
-                errors,
-            );
-        }
-        res
-            .status(StatusCodes.BAD_REQUEST)
-            .mjson({errors: errors.array()});
+        return;
     }
+
+    if (!isProduction()) {
+        // Debug message
+        console.warn("A bad request received:", errors);
+    }
+    res.
+        status(StatusCodes.BAD_REQUEST).
+        send({errors: errors.array()});
 };
