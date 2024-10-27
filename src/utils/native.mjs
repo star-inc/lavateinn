@@ -2,6 +2,7 @@
 
 import {
     createHash,
+    createHmac,
     randomBytes,
 } from "node:crypto";
 
@@ -23,7 +24,7 @@ export function dateNowSecond() {
  * @param {string} propName
  * @return {boolean}
  */
-export function isObjectPropExists(srcObject, propName) {
+export function hasProp(srcObject, propName) {
     return Object.hasOwn(srcObject, propName);
 }
 
@@ -50,6 +51,19 @@ export function snakeToCamelCase(str) {
 }
 
 /**
+ * Create cryptographic random code.
+ * @param {number} length length of code
+ * @return {string}
+ */
+export function randomCode(length) {
+    const maxValue = (10 ** length) - 1;
+    return crypto.
+        randomInt(0, maxValue).
+        toString().
+        padStart(length, "0");
+}
+
+/**
  * Create cryptographic random string.
  * @param {number} length
  * @return {string}
@@ -60,12 +74,21 @@ export function randomString(length) {
 }
 
 /**
- * Hash string into md5 hex.
- * @param {string} data
+ * Hash string into hash hex.
+ * @param {string} data - The input data.
+ * @param {string} [algo] - The algorithm to use.
  * @return {string}
  */
-export function md5hex(data) {
-    return createHash("md5").
-        update(data).
-        digest("hex");
+export function hash5hex(data, algo="md5") {
+    return createHash(algo).update(data).digest("hex");
+}
+
+/**
+ * Hash string into hash hex.
+ * @param {string} data - The input data.
+ * @param {string} [algo=md5] - The algorithm to use.
+ * @return {string}
+ */
+export function hmac5hex(data, algo="md5") {
+    return createHmac(algo).update(data).digest("hex");
 }

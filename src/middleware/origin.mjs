@@ -4,12 +4,12 @@
 // Import modules
 import {isProduction, getMust} from "../config.mjs";
 import {StatusCodes} from "http-status-codes";
-import {isObjectPropExists} from "../utils/native.mjs";
+import {hasProp} from "../utils/native.mjs";
 
 // Export (function)
 export default (req, res, next) => {
     // Check if the request has CORS origin header
-    if (!isObjectPropExists(req.headers, "origin")) {
+    if (!hasProp(req.headers, "origin")) {
         if (!isProduction()) {
             // Debug message
             console.warn("CORS origin header is not detected");
