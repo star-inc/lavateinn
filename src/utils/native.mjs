@@ -6,13 +6,13 @@ import {
 } from "node:crypto";
 
 /**
- * Get POSIX Timestamp (second)
+ * Get POSIX Timestamp in seconds.
  * @module native
  * @function
  * @return {number}
  */
-export function getPosixTimestamp() {
-    return Math.floor(new Date().getTime() / 1000);
+export function dateNowSecond() {
+    return Math.floor(Date.now() / 1000);
 }
 
 /**
