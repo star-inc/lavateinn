@@ -41,5 +41,9 @@ if (isEnabledCors && isEnabledCorsOriginCheck) {
 // Export useFunction
 export const useApp = () => app;
 
+// Export withAwait
+export const withAwait = (fn) => (req, res, next) =>
+    Promise.resolve(fn(req, res, next)).catch(next);
+
 // Export express for shortcut
 export {express};
