@@ -74,10 +74,10 @@ export function getEnabled(key) {
  * @module config
  * @function
  * @param {string} key the key
- * @param {string} separator [separator=,] the separator.
+ * @param {string} [separator=,] the separator.
  * @return {string[]} the array value
  */
-export function getSplited(key, separator = ",") {
+export function getSplited(key, separator=",") {
     return getMust(key).
         split(separator).
         filter((s) => s).
