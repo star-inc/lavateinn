@@ -120,8 +120,8 @@ router.get("/empty",
  *     responses:
  *       200:
  *         description: Returns "Hello" if the answer is correct.
- *       401:
- *         description: Returns "Unauthorized" if the answer is wrong.
+ *       403:
+ *         description: Returns "Forbidden" if the answer is wrong.
  */
 const trustedCode = "qwertyuiop";
 router.get("/guess/:code",
@@ -129,7 +129,7 @@ router.get("/guess/:code",
     (req, res) => {
         const untrustedCode = req.params.code;
         if (untrustedCode !== trustedCode) {
-            res.sendStatus(StatusCodes.UNAUTHORIZED);
+            res.sendStatus(StatusCodes.FORBIDDEN);
             return;
         }
         res.send(`Hello! ${trustedCode}`);
