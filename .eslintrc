@@ -4,10 +4,12 @@
   ],
   "extends": [
     "eslint:recommended",
-    "google"
+    "plugin:jsdoc/recommended",
+    "nymph"
   ],
   "rules": {
     "jsdoc/no-undefined-types": 1,
+    "jsdoc/require-hyphen-before-param-description": 1,
     "linebreak-style": 1,
     "indent": [
       "error",

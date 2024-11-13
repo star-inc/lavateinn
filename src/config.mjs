@@ -28,7 +28,7 @@ export function runLoader() {
  * Check is production mode.
  * @module config
  * @function
- * @return {boolean} true if production
+ * @returns {boolean} True if it's production.
  */
 export function isProduction() {
     return getMust("NODE_ENV") === "production";
@@ -38,7 +38,7 @@ export function isProduction() {
  * Get overview of current environment.
  * @module config
  * @function
- * @return {object}
+ * @returns {object} The overview.
  */
 export function getOverview() {
     return {
@@ -51,8 +51,8 @@ export function getOverview() {
  * Shortcut to get config value.
  * @module config
  * @function
- * @param {string} key the key
- * @return {string} the value
+ * @param {string} key - The config key.
+ * @returns {string} The config value.
  */
 export function get(key) {
     return process.env[key];
@@ -62,8 +62,8 @@ export function get(key) {
  * Get the bool value from config, if yes, returns true.
  * @module config
  * @function
- * @param {string} key the key
- * @return {boolean} the bool value
+ * @param {string} key - The config key.
+ * @returns {boolean} The boolean value.
  */
 export function getEnabled(key) {
     return getMust(key) === "yes";
@@ -73,9 +73,9 @@ export function getEnabled(key) {
  * Get the array value from config.
  * @module config
  * @function
- * @param {string} key the key
- * @param {string} [separator=,] the separator.
- * @return {string[]} the array value
+ * @param {string} key - The config key.
+ * @param {string} [separator] - The separator.
+ * @returns {string[]} The array value.
  */
 export function getSplited(key, separator=",") {
     return getMust(key).
@@ -88,9 +88,9 @@ export function getSplited(key, separator=",") {
  * Get the value from config with error thrown.
  * @module config
  * @function
- * @param {string} key the key
- * @return {string} the expected value
- * @throws {Error} if value is undefined, throw an error
+ * @param {string} key - The config key.
+ * @returns {string} The expected value.
+ * @throws {Error} If value is undefined, throw an error.
  */
 export function getMust(key) {
     const value = get(key);
@@ -104,9 +104,9 @@ export function getMust(key) {
  * Get the value from config with fallback.
  * @module config
  * @function
- * @param {string} key the key
- * @param {string} fallback the fallback value
- * @return {string} the expected value
+ * @param {string} key - The config key.
+ * @param {string} fallback - The fallback value.
+ * @returns {string} The expected value.
  */
 export function getFallback(key, fallback) {
     return get(key) || fallback;

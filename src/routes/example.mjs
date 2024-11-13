@@ -18,7 +18,7 @@ const router = newRouter();
 router.use(express.json());
 
 /**
- * @openapi
+ * >openapi
  * /example/now:
  *   get:
  *     tags:
@@ -34,7 +34,7 @@ router.get("/now", (_, res) => {
 });
 
 /**
- * @openapi
+ * >openapi
  * /example/visitor:
  *   get:
  *     tags:
@@ -54,7 +54,7 @@ router.get("/visitor", (req, res) => {
 });
 
 /**
- * @openapi
+ * >openapi
  * /example/env:
  *   get:
  *     tags:
@@ -70,7 +70,7 @@ router.get("/env", (_, res) => {
 });
 
 /**
- * @openapi
+ * >openapi
  * /example/empty:
  *   get:
  *     tags:
@@ -103,7 +103,7 @@ router.get("/empty",
 );
 
 /**
- * @openapi
+ * >openapi
  * /example/guess/{code}:
  *   get:
  *     tags:

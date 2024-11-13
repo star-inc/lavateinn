@@ -10,7 +10,7 @@ import {
  * Get POSIX Timestamp in seconds.
  * @module native
  * @function
- * @return {number}
+ * @returns {number} The current timestamp in seconds.
  */
 export function dateNowSecond() {
     return Math.floor(Date.now() / 1000);
@@ -20,9 +20,9 @@ export function dateNowSecond() {
  * Shortcut for hasOwnProperty with safe.
  * @module native
  * @function
- * @param {object} srcObject
- * @param {string} propName
- * @return {boolean}
+ * @param {object} srcObject - The source object.
+ * @param {string} propName - The property name.
+ * @returns {boolean} true if the property exists.
  */
 export function hasProp(srcObject, propName) {
     return Object.hasOwn(srcObject, propName);
@@ -30,8 +30,10 @@ export function hasProp(srcObject, propName) {
 
 /**
  * Converts a string from camelCase to snake_case.
- * @param {string} str The input string in camelCase format.
- * @return {string} The transformed string in snake_case format.
+ * @module native
+ * @function
+ * @param {string} str - The input string in camelCase format.
+ * @returns {string} The transformed string in snake_case format.
  */
 export function camelToSnakeCase(str) {
     return str.replace(/[A-Z]/g, (letter) =>
@@ -41,8 +43,10 @@ export function camelToSnakeCase(str) {
 
 /**
  * Converts a camelCase string to snake_case.
- * @param {string} str The input string in snake_case format.
- * @return {string} The transformed string in camelCase format.
+ * @module native
+ * @function
+ * @param {string} str - The input string in snake_case format.
+ * @returns {string} The transformed string in camelCase format.
  */
 export function snakeToCamelCase(str) {
     return str.toLowerCase().replace(/([-_][a-z])/g, (group) =>
@@ -52,8 +56,10 @@ export function snakeToCamelCase(str) {
 
 /**
  * Create cryptographic random code.
- * @param {number} length length of code
- * @return {string}
+ * @module native
+ * @function
+ * @param {number} length - Length of code.
+ * @returns {string} The random code.
  */
 export function randomCode(length) {
     const maxValue = (10 ** length) - 1;
@@ -65,8 +71,10 @@ export function randomCode(length) {
 
 /**
  * Create cryptographic random string.
- * @param {number} length
- * @return {string}
+ * @module native
+ * @function
+ * @param {number} length - Length of string.
+ * @returns {string} The random string.
  */
 export function randomString(length) {
     const seed = randomBytes(length);
@@ -75,9 +83,11 @@ export function randomString(length) {
 
 /**
  * Hash string into hash hex.
+ * @module native
+ * @function
  * @param {string} data - The input data.
  * @param {string} [algo] - The algorithm to use.
- * @return {string}
+ * @returns {string} The hash hex.
  */
 export function hash5hex(data, algo="md5") {
     return createHash(algo).update(data).digest("hex");
@@ -85,9 +95,11 @@ export function hash5hex(data, algo="md5") {
 
 /**
  * Hash string into hash hex.
+ * @module native
+ * @function
  * @param {string} data - The input data.
- * @param {string} [algo=md5] - The algorithm to use.
- * @return {string}
+ * @param {string} [algo] - The algorithm to use.
+ * @returns {string} The hash hex.
  */
 export function hmac5hex(data, algo="md5") {
     return createHmac(algo).update(data).digest("hex");

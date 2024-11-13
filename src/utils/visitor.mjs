@@ -6,8 +6,8 @@ import {isProduction} from "../config.mjs";
  * Get IP Address.
  * @module visitor
  * @function
- * @param {object} req the request
- * @return {string} the IP Address
+ * @param {object} req - The request.
+ * @returns {string} The IP Address.
  */
 export function getIPAddress(req) {
     if (!isProduction()) {
@@ -20,8 +20,8 @@ export function getIPAddress(req) {
  * Get User-Agent.
  * @module visitor
  * @function
- * @param {object} req the request
- * @return {string} the User-Agent
+ * @param {object} req - The request.
+ * @returns {string} The User-Agent.
  */
 export function getUserAgent(req) {
     return req.header("user-agent") || "Unknown";

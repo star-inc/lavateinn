@@ -31,7 +31,7 @@
     "@commitlint/config-conventional": "^17.4.4",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.17.0",
-    "eslint-config-google": "^0.14.0",
+    "eslint-config-nymph": "^0.15.0",
     "eslint-plugin-jsdoc": "^48.2.3",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.0",

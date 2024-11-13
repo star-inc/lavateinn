@@ -23,8 +23,10 @@ import {
 
 /**
  * Setup protocol - http
- * @param {object} app
- * @return {Promise<object>} the setup status
+ * @module execute
+ * @function
+ * @param {object} app - The application.
+ * @returns {Promise<object>} The setup status.
  */
 function setupHttpProtocol(app) {
     const protocol = "http";
@@ -39,8 +41,10 @@ function setupHttpProtocol(app) {
 
 /**
  * Setup protocol - https
- * @param {object} app
- * @return {Promise<object>} the setup status
+ * @module execute
+ * @function
+ * @param {object} app - The application.
+ * @returns {Promise<object>} The setup status.
  */
 async function setupHttpsProtocol(app) {
     const protocol = "https";
@@ -60,7 +64,9 @@ async function setupHttpsProtocol(app) {
 
 /**
  * Defines an application invoker.
- * @return {object} the application invoker
+ * @module execute
+ * @function
+ * @returns {object} The application invoker.
  */
 export function invokeApp() {
     return {
@@ -76,8 +82,10 @@ const preparingPromises = [];
 
 /**
  * Load promises to be executed before running the application.
- * @param {Promise[]} promises the promises to load
- * @return {object} the application invoker
+ * @module execute
+ * @function
+ * @param {Promise[]} promises - The promises to load.
+ * @returns {object} The application invoker.
  */
 function loadPromises(promises) {
     if (promises.length < 1) {
@@ -90,8 +98,10 @@ function loadPromises(promises) {
 
 /**
  * Load routes from specified router names.
- * @param {string[]} routerNames the names of the routers to load
- * @return {object} the application invoker
+ * @module execute
+ * @function
+ * @param {string[]} routerNames - The names of the routers to load.
+ * @returns {object} The application invoker.
  */
 function loadRoutes(routerNames) {
     routerNames = routerNames.map(camelToSnakeCase);
@@ -109,8 +119,10 @@ function loadRoutes(routerNames) {
 
 /**
  * Load exit signal handlers.
- * @param {object} exitHandlers the exit signal handlers
- * @return {object} the application invoker
+ * @module execute
+ * @function
+ * @param {object} exitHandlers - The exit signal handlers.
+ * @returns {object} The application invoker.
  */
 function loadExits(exitHandlers) {
     // Handle exit signals
@@ -131,7 +143,9 @@ function loadExits(exitHandlers) {
 
 /**
  * Prepare the application and automatically detect protocols.
- * @return {Promise<void[]>} a promise that resolves when prepared
+ * @module execute
+ * @function
+ * @returns {Promise<void[]>} A promise that resolves when prepared.
  */
 async function execute() {
     // Use application

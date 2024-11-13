@@ -44,7 +44,7 @@ For example,
 the one jsdoc of OpenAPIs':
 ```js
 /**
- * @openapi
+ * >openapi
  * /example/now:
  *   get:
  *     tags:

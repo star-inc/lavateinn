@@ -10,9 +10,9 @@ import {getIPAddress} from "../utils/visitor.mjs";
  * Get path key from request.
  * @module restrictor
  * @function
- * @param {object} req the request
- * @param {boolean} isParam is param mode
- * @return {string}
+ * @param {object} req - The request.
+ * @param {boolean} isParam - To detect param mode or not.
+ * @returns {string} The path key.
  */
 function getPathKey(req, isParam) {
     const pathArray = req.originalUrl.split("/").filter((i) => !!i);
