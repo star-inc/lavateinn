@@ -89,7 +89,7 @@ export function randomString(length) {
  * @param {string} [algo] - The algorithm to use.
  * @returns {string} The hash hex.
  */
-export function hash5hex(data, algo="md5") {
+export function hash2hex(data, algo="md5") {
     return createHash(algo).update(data).digest("hex");
 }
 
@@ -101,6 +101,6 @@ export function hash5hex(data, algo="md5") {
  * @param {string} [algo] - The algorithm to use.
  * @returns {string} The hash hex.
  */
-export function hmac5hex(data, algo="md5") {
+export function hmac2hex(data, algo="md5") {
     return createHmac(algo).update(data).digest("hex");
 }
