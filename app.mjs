@@ -1,10 +1,12 @@
 // Auto-load config
 import "./src/init/config.mjs";
 
-// Import modules
+// Import constants
 import {
     APP_NAME as appName,
 } from "./src/init/const.mjs";
+
+// Import modules
 import {
     getOverview,
 } from "./src/config.mjs";
@@ -13,13 +15,18 @@ import {
 } from "./src/execute.mjs";
 
 import {
+    useLogger,
+} from "./src/init/logger.mjs";
+
+import {
     exitHandler as tempExitHandler,
 } from "./src/init/temp.mjs";
 
 // Define plugin promises
 const pluginPromises = [
     new Promise((resolve) => {
-        console.info("The example to wait the plugin promise.");
+        const logger = useLogger();
+        logger.warn("The example to wait the plugin promise.");
         setTimeout(resolve, 3000);
     }),
 ];
@@ -34,7 +41,8 @@ const routerNames = [
 const exitHandlers = [
     tempExitHandler,
     () => {
-        console.info("The example to handle exit signals.");
+        const logger = useLogger();
+        logger.info("The example to handle exit signals.");
     },
 ];
 
@@ -42,10 +50,11 @@ const exitHandlers = [
 const displayStatus = (protocolStatus) => {
     const viewIt = ({protocol, hostname, port}) => {
         const {node, runtime} = getOverview();
-        console.info(appName, `(environment: ${node}, ${runtime})`);
-        console.info("====");
-        console.info(`Protocol "${protocol}" is listening at`);
-        console.info(`${protocol}://${hostname}:${port}`);
+        const logger = useLogger();
+        logger.info(appName, `(environment: ${node}, ${runtime})`);
+        logger.info("====");
+        logger.info(`Protocol "${protocol}" is listening at`);
+        logger.info(`${protocol}://${hostname}:${port}`);
     };
     protocolStatus.forEach(viewIt);
 };

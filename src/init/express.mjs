@@ -1,10 +1,13 @@
 // express.js is a web framework.
 
 // Import modules
-import {getSplited, getEnabled} from "../config.mjs";
 import express from "express";
+import {StatusCodes} from "http-status-codes";
 
-// Create middleware handlers
+// Import config
+import {getSplited, getEnabled} from "../config.mjs";
+
+// Import middleware
 import middlewareHttpsRedirect from "../middleware/https_redirect.mjs";
 import middlewareCORS from "../middleware/cors.mjs";
 import middlewareOrigin from "../middleware/origin.mjs";
@@ -38,12 +41,28 @@ if (isEnabledCors && isEnabledCorsOriginCheck) {
     app.use(middlewareOrigin);
 }
 
-// Export useFunction
-export const useApp = () => app;
+/**
+ * Composable application.
+ * @module src/init/express
+ * @returns {express.Application} The express app.
+ */
+export function useApp() {
+    return app;
+}
 
-// Export withAwait
-export const withAwait = (fn) => (req, res, next) =>
-    Promise.resolve(fn(req, res, next)).catch(next);
+/**
+ * Wrap express async handler with Promise.
+ * @module src/init/express
+ * @param {express.Handler} handler - The express handler.
+ * @returns {express.Handler} The wrapped express handler.
+ */
+export function withAwait(handler) {
+    return (req, res, next) => {
+        Promise.resolve(handler(
+            req, res, next,
+        )).catch(next);
+    };
+}
 
 // Export express for shortcut
-export {express};
+export {express, StatusCodes};

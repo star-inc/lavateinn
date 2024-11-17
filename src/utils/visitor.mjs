@@ -4,8 +4,7 @@ import {isProduction} from "../config.mjs";
 
 /**
  * Get IP Address.
- * @module visitor
- * @function
+ * @module src/utils/visitor
  * @param {object} req - The request.
  * @returns {string} The IP Address.
  */
@@ -18,8 +17,7 @@ export function getIPAddress(req) {
 
 /**
  * Get User-Agent.
- * @module visitor
- * @function
+ * @module src/utils/visitor
  * @param {object} req - The request.
  * @returns {string} The User-Agent.
  */

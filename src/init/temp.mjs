@@ -1,22 +1,22 @@
-// Import process
-import {
-    tmpdir,
-} from "node:os";
-import {
-    join as pathJoin,
-} from "node:path";
-import {
-    mkdirSync,
-} from "node:fs";
+// Temporary files and directories management
 
-import {
-    rimrafSync,
-} from "rimraf";
+// Import modules
+import {tmpdir} from "node:os";
+import {join as pathJoin} from "node:path";
+
+import {mkdirSync} from "node:fs";
+import {rimrafSync} from "rimraf";
 
 const tempPathPrefix = tmpdir();
 const tempPathMap = {};
 
-export const useTemp = (name) => {
+/**
+ * Create a temporary file or directory.
+ * @module src/init/temp
+ * @param {string} name - The name of the temporary file or directory.
+ * @returns {object} The temporary file or directory.
+ */
+export function useTemp(name) {
     const path = pathJoin(tempPathPrefix, name);
     const cleanup = () => {
         delete tempPathMap[name];
@@ -27,11 +27,14 @@ export const useTemp = (name) => {
     });
     tempPathMap[name] = path;
     return {path, cleanup};
-};
+}
 
-// Handle exit signals
-export const exitHandler = () => {
+/**
+ * The exit handler to clean up temporary files and directories.
+ * @returns {void}
+ */
+export function exitHandler() {
     Object.values(tempPathMap).forEach((path) => {
         rimrafSync(path);
     });
-};
+}

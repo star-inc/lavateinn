@@ -1,7 +1,6 @@
 // Import modules
 import {getOverview} from "../config.mjs";
-import {StatusCodes} from "http-status-codes";
-import {useApp, express} from "../init/express.mjs";
+import {useApp, express, StatusCodes} from "../init/express.mjs";
 
 import * as utilVisitor from "../utils/visitor.mjs";
 import * as utilNative from "../utils/native.mjs";

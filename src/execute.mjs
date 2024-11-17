@@ -23,8 +23,7 @@ import {
 
 /**
  * Setup protocol - http
- * @module execute
- * @function
+ * @module src/execute
  * @param {object} app - The application.
  * @returns {Promise<object>} The setup status.
  */
@@ -41,8 +40,7 @@ function setupHttpProtocol(app) {
 
 /**
  * Setup protocol - https
- * @module execute
- * @function
+ * @module src/execute
  * @param {object} app - The application.
  * @returns {Promise<object>} The setup status.
  */
@@ -64,8 +62,7 @@ async function setupHttpsProtocol(app) {
 
 /**
  * Defines an application invoker.
- * @module execute
- * @function
+ * @module src/execute
  * @returns {object} The application invoker.
  */
 export function invokeApp() {
@@ -82,8 +79,7 @@ const preparingPromises = [];
 
 /**
  * Load promises to be executed before running the application.
- * @module execute
- * @function
+ * @module src/execute
  * @param {Promise[]} promises - The promises to load.
  * @returns {object} The application invoker.
  */
@@ -98,8 +94,7 @@ function loadPromises(promises) {
 
 /**
  * Load routes from specified router names.
- * @module execute
- * @function
+ * @module src/execute
  * @param {string[]} routerNames - The names of the routers to load.
  * @returns {object} The application invoker.
  */
@@ -119,8 +114,7 @@ function loadRoutes(routerNames) {
 
 /**
  * Load exit signal handlers.
- * @module execute
- * @function
+ * @module src/execute
  * @param {object} exitHandlers - The exit signal handlers.
  * @returns {object} The application invoker.
  */
@@ -143,8 +137,7 @@ function loadExits(exitHandlers) {
 
 /**
  * Prepare the application and automatically detect protocols.
- * @module execute
- * @function
+ * @module src/execute
  * @returns {Promise<void[]>} A promise that resolves when prepared.
  */
 async function execute() {

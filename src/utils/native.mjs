@@ -8,8 +8,7 @@ import {
 
 /**
  * Get POSIX Timestamp in seconds.
- * @module native
- * @function
+ * @module src/utils/native
  * @returns {number} The current timestamp in seconds.
  */
 export function dateNowSecond() {
@@ -18,8 +17,7 @@ export function dateNowSecond() {
 
 /**
  * Shortcut for hasOwnProperty with safe.
- * @module native
- * @function
+ * @module src/utils/native
  * @param {object} srcObject - The source object.
  * @param {string} propName - The property name.
  * @returns {boolean} true if the property exists.
@@ -30,8 +28,7 @@ export function hasProp(srcObject, propName) {
 
 /**
  * Converts a string from camelCase to snake_case.
- * @module native
- * @function
+ * @module src/utils/native
  * @param {string} str - The input string in camelCase format.
  * @returns {string} The transformed string in snake_case format.
  */
@@ -43,8 +40,7 @@ export function camelToSnakeCase(str) {
 
 /**
  * Converts a camelCase string to snake_case.
- * @module native
- * @function
+ * @module src/utils/native
  * @param {string} str - The input string in snake_case format.
  * @returns {string} The transformed string in camelCase format.
  */
@@ -56,8 +52,7 @@ export function snakeToCamelCase(str) {
 
 /**
  * Create cryptographic random code.
- * @module native
- * @function
+ * @module src/utils/native
  * @param {number} length - Length of code.
  * @returns {string} The random code.
  */
@@ -71,8 +66,7 @@ export function randomCode(length) {
 
 /**
  * Create cryptographic random string.
- * @module native
- * @function
+ * @module src/utils/native
  * @param {number} length - Length of string.
  * @returns {string} The random string.
  */
@@ -83,8 +77,7 @@ export function randomString(length) {
 
 /**
  * Hash string into hash hex.
- * @module native
- * @function
+ * @module src/utils/native
  * @param {string} data - The input data.
  * @param {string} [algo] - The algorithm to use.
  * @returns {string} The hash hex.
@@ -95,8 +88,7 @@ export function hash2hex(data, algo="md5") {
 
 /**
  * Hash string into hash hex.
- * @module native
- * @function
+ * @module src/utils/native
  * @param {string} data - The input data.
  * @param {string} [algo] - The algorithm to use.
  * @returns {string} The hash hex.

@@ -4,7 +4,15 @@
 import NodeCache from "node-cache";
 
 // Initialize node-cache
-const cache = new NodeCache({stdTTL: 100});
+const cache = new NodeCache({
+    stdTTL: 100,
+});
 
-// Export as a function named useCache
-export const useCache = () => cache;
+/**
+ * Composable cache.
+ * @module src/init/cache
+ * @returns {NodeCache} The cached node-cache
+ */
+export function useCache() {
+    return cache;
+}

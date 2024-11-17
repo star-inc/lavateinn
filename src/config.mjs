@@ -1,6 +1,10 @@
 // Import modules
 import {existsSync} from "node:fs";
 import dotenv from "dotenv";
+import {useLogger} from "./init/logger.mjs";
+
+// Use composable functions
+const logger = useLogger();
 
 /**
  * Load configs from system environment variables.
@@ -12,7 +16,7 @@ export function runLoader() {
     const isCustomDefined = get("APP_CONFIGURED") === "1";
 
     if (!isDotEnvFileExists && !isCustomDefined) {
-        console.error(
+        logger.error(
             "No '.env' file detected in app root.",
             "If you're not using dotenv file,",
             "set 'APP_CONFIGURED=1' into environment variables.",
@@ -26,8 +30,7 @@ export function runLoader() {
 
 /**
  * Check is production mode.
- * @module config
- * @function
+ * @module src/config
  * @returns {boolean} True if it's production.
  */
 export function isProduction() {
@@ -36,8 +39,7 @@ export function isProduction() {
 
 /**
  * Get overview of current environment.
- * @module config
- * @function
+ * @module src/config
  * @returns {object} The overview.
  */
 export function getOverview() {
@@ -49,8 +51,7 @@ export function getOverview() {
 
 /**
  * Shortcut to get config value.
- * @module config
- * @function
+ * @module src/config
  * @param {string} key - The config key.
  * @returns {string} The config value.
  */
@@ -60,8 +61,7 @@ export function get(key) {
 
 /**
  * Get the bool value from config, if yes, returns true.
- * @module config
- * @function
+ * @module src/config
  * @param {string} key - The config key.
  * @returns {boolean} The boolean value.
  */
@@ -71,8 +71,7 @@ export function getEnabled(key) {
 
 /**
  * Get the array value from config.
- * @module config
- * @function
+ * @module src/config
  * @param {string} key - The config key.
  * @param {string} [separator] - The separator.
  * @returns {string[]} The array value.
@@ -86,8 +85,7 @@ export function getSplited(key, separator=",") {
 
 /**
  * Get the value from config with error thrown.
- * @module config
- * @function
+ * @module src/config
  * @param {string} key - The config key.
  * @returns {string} The expected value.
  * @throws {Error} If value is undefined, throw an error.
@@ -102,8 +100,7 @@ export function getMust(key) {
 
 /**
  * Get the value from config with fallback.
- * @module config
- * @function
+ * @module src/config
  * @param {string} key - The config key.
  * @param {string} fallback - The fallback value.
  * @returns {string} The expected value.

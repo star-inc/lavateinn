@@ -1,10 +1,8 @@
 // Import modules
-import {
-    StatusCodes,
-} from "http-status-codes";
 
 import {
     useApp,
+    StatusCodes,
 } from "../init/express.mjs";
 
 // Export routes mapper (function)
