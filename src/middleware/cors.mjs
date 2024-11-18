@@ -4,7 +4,7 @@
 import {getMust} from "../config.mjs";
 import cors from "cors";
 
-// Read config
+// Read configuration
 const origin = getMust("CORS_ORIGIN");
 
 // Export (function)

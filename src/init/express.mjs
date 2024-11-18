@@ -12,7 +12,7 @@ import middlewareHttpsRedirect from "../middleware/https_redirect.mjs";
 import middlewareCORS from "../middleware/cors.mjs";
 import middlewareOrigin from "../middleware/origin.mjs";
 
-// Read config
+// Read configuration
 const trustProxy = getSplited("TRUST_PROXY", ",");
 
 const isEnabledRedirectHttpHttps = getEnabled("ENABLED_REDIRECT_HTTP_HTTPS");
