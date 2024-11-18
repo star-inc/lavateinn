@@ -3,7 +3,7 @@ import "./src/init/config.mjs";
 
 // Import constants
 import {
-    APP_NAME as appName,
+    APP_NAME,
 } from "./src/init/const.mjs";
 
 // Import modules
@@ -51,7 +51,7 @@ const displayStatus = (protocolStatus) => {
     const viewIt = ({protocol, hostname, port}) => {
         const {node, runtime} = getOverview();
         const logger = useLogger();
-        logger.info(appName, `(environment: ${node}, ${runtime})`);
+        logger.info(APP_NAME, `(environment: ${node}, ${runtime})`);
         logger.info("====");
         logger.info(`Protocol "${protocol}" is listening at`);
         logger.info(`${protocol}://${hostname}:${port}`);

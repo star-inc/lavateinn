@@ -2,7 +2,7 @@
 
 // Import constants
 import {
-    APP_NAME as appName,
+    APP_NAME,
 } from "./const.mjs";
 
 // Import modules
@@ -16,7 +16,7 @@ const logConsole = new winston.transports.Console({
     ),
 });
 const logFile = new winston.transports.File({
-    filename: `${appName}.log`,
+    filename: `${APP_NAME}.log`,
     format: winston.format.combine(
         winston.format.timestamp(),
         winston.format.json(),
