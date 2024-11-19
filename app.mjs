@@ -8,9 +8,12 @@ import {
 
 // Import modules
 import {
-    getOverview,
+    getNodeEnv,
+    getRuntimeEnv,
+    getInstanceMode,
 } from "./src/config.mjs";
 import {
+    instanceId,
     invokeApp,
 } from "./src/execute.mjs";
 
@@ -49,10 +52,19 @@ const exitHandlers = [
 // Define display
 const displayStatus = (protocolStatus) => {
     const viewIt = ({protocol, hostname, port}) => {
-        const {node, runtime} = getOverview();
+        // Use logger
         const logger = useLogger();
-        logger.info(APP_NAME, `(environment: ${node}, ${runtime})`);
+
+        // Get node and runtime environment information.
+        const nodeEnv = getNodeEnv();
+        const runtimeEnv = getRuntimeEnv();
+        const instanceMode = getInstanceMode();
+
+        // Display the status
+        logger.info(APP_NAME);
         logger.info("====");
+        logger.info(`Environment: ${nodeEnv}, ${runtimeEnv})`);
+        logger.info(`Instance: ${instanceId}, ${instanceMode}`);
         logger.info(`Protocol "${protocol}" is listening at`);
         logger.info(`${protocol}://${hostname}:${port}`);
     };

@@ -1,10 +1,6 @@
 // Import modules
 import {existsSync} from "node:fs";
 import dotenv from "dotenv";
-import {useLogger} from "./init/logger.mjs";
-
-// Use composable functions
-const logger = useLogger();
 
 /**
  * Load configs from system environment variables.
@@ -16,7 +12,7 @@ export function runLoader() {
     const isCustomDefined = get("APP_CONFIGURED") === "1";
 
     if (!isDotEnvFileExists && !isCustomDefined) {
-        logger.error(
+        console.error(
             "No '.env' file detected in app root.",
             "If you're not using dotenv file,",
             "set 'APP_CONFIGURED=1' into environment variables.",
@@ -29,24 +25,48 @@ export function runLoader() {
 }
 
 /**
+ * Get the current NODE_ENV value.
+ * @module src/config
+ * @returns {string} The NODE_ENV value.
+ */
+export function getNodeEnv() {
+    return getFallback("NODE_ENV", "development");
+}
+
+/**
+ * Get the current RUNTIME_ENV value.
+ * @module src/config
+ * @returns {string} The RUNTIME_ENV value.
+ */
+export function getRuntimeEnv() {
+    return getFallback("RUNTIME_ENV", "native");
+}
+
+/**
+ * Get the current INSTANCE_MODE value.
+ * @module src/config
+ * @returns {string} The INSTANCE_MODE value.
+ */
+export function getInstanceMode() {
+    return getFallback("INSTANCE_MODE", "single");
+}
+
+/**
  * Check is production mode.
  * @module src/config
  * @returns {boolean} True if it's production.
  */
 export function isProduction() {
-    return getMust("NODE_ENV") === "production";
+    return getNodeEnv() === "production";
 }
 
 /**
- * Get overview of current environment.
+ * Check is cluster mode.
  * @module src/config
- * @returns {object} The overview.
+ * @returns {boolean} True if it's cluster mode.
  */
-export function getOverview() {
-    return {
-        node: getFallback("NODE_ENV", "development"),
-        runtime: getFallback("RUNTIME_ENV", "native"),
-    };
+export function isCluster() {
+    return getInstanceMode() === "cluster";
 }
 
 /**

@@ -1,5 +1,9 @@
 // Import modules
-import {getOverview} from "../config.mjs";
+import {
+    getNodeEnv,
+    getRuntimeEnv,
+    getInstanceMode,
+} from "../config.mjs";
 import {useApp, express, StatusCodes} from "../init/express.mjs";
 
 import * as utilVisitor from "../utils/visitor.mjs";
@@ -65,7 +69,17 @@ router.get("/visitor", (req, res) => {
  *         description: Returns the application environment.
  */
 router.get("/env", (_, res) => {
-    res.send(getOverview());
+    // Get environment variables
+    const nodeEnv = getNodeEnv();
+    const runtimeEnv = getRuntimeEnv();
+    const instanceMode = getInstanceMode();
+
+    // Send response
+    res.send({
+        node_env: nodeEnv,
+        runtime_env: runtimeEnv,
+        instance_mode: instanceMode,
+    });
 });
 
 /**

@@ -1,37 +1,57 @@
 // winston is a powerful logging library.
 
-// Import constants
-import {
-    APP_NAME,
-} from "./const.mjs";
-
 // Import modules
 import winston from "winston";
+import {getMust, getEnabled} from "../config.mjs";
 
-// Default log transports
-const logConsole = new winston.transports.Console({
-    format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple(),
-    ),
-});
-const logFile = new winston.transports.File({
-    filename: `${APP_NAME}.log`,
+// Read configuration
+const loggingLevel = getMust("LOGGING_LEVEL");
+const isLoggingConsole = getEnabled("LOGGING_CONSOLE");
+const loggingFilePath = getMust("LOGGING_FILE_PATH");
+const loggingHttpUrl = getMust("LOGGING_HTTP_URL");
+
+// Define logging configuration
+const useLoggingConsole = () => isLoggingConsole &&
+ new winston.transports.Console({
+     format: winston.format.combine(
+         winston.format.colorize(),
+         winston.format.simple(),
+     ),
+ });
+
+const useLoggingHttp = () => loggingHttpUrl &&
+new winston.transports.Http({
+    ...new URL(loggingHttpUrl),
     format: winston.format.combine(
         winston.format.timestamp(),
         winston.format.json(),
     ),
 });
 
+const useLoggingFile = () => loggingFilePath &&
+new winston.transports.File({
+    filename: loggingFilePath,
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json(),
+    ),
+});
+
+// Create logger
+const logger = winston.createLogger({
+    transports: [
+        useLoggingConsole(),
+        useLoggingHttp(),
+        useLoggingFile(),
+    ],
+    level: loggingLevel,
+});
+
 /**
  * Composable logger.
  * @module src/init/logger
- * @param {string} level - The log level.
  * @returns {winston.Logger} The logger.
  */
-export function useLogger(level) {
-    return winston.createLogger({
-        transports: [logConsole, logFile],
-        level: level || "info",
-    });
+export function useLogger() {
+    return logger;
 }

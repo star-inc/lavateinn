@@ -1,6 +1,9 @@
 // Import modules
 
 import {
+    instanceId,
+} from "../execute.mjs";
+import {
     useApp,
     StatusCodes,
 } from "../init/express.mjs";
@@ -19,6 +22,11 @@ export default () => {
         </a>
         `;
         res.status(StatusCodes.IM_A_TEAPOT).send(meetMessage);
+    });
+
+    // The handler of heartbeat
+    app.get("/heart", (_, res) => {
+        res.type("text").send(instanceId);
     });
 
     // The handler for robots.txt (deny all friendly robots)

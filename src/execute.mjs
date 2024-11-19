@@ -1,3 +1,8 @@
+// Import constants
+import {
+    APP_NAME,
+} from "./init/const.mjs";
+
 // Import modules
 import {
     getMust,
@@ -14,12 +19,20 @@ import {
 } from "node:fs/promises";
 
 import {
+    nanoid,
+} from "nanoid";
+
+import {
     useApp,
 } from "./init/express.mjs";
 
 import {
     camelToSnakeCase,
 } from "./utils/native.mjs";
+
+// Define instance id
+export const instanceId =
+    `${APP_NAME}#${nanoid()}`;
 
 /**
  * Setup protocol - http
