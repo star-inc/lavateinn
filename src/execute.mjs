@@ -1,8 +1,3 @@
-// Import constants
-import {
-    APP_NAME,
-} from "./init/const.mjs";
-
 // Import modules
 import {
     getMust,
@@ -19,20 +14,12 @@ import {
 } from "node:fs/promises";
 
 import {
-    nanoid,
-} from "nanoid";
-
-import {
     useApp,
 } from "./init/express.mjs";
 
 import {
     camelToSnakeCase,
 } from "./utils/native.mjs";
-
-// Define instance id
-export const instanceId =
-    `${APP_NAME}#${nanoid()}`;
 
 /**
  * Setup protocol - http
@@ -80,29 +67,11 @@ async function setupHttpsProtocol(app) {
  */
 export function invokeApp() {
     return {
-        loadPromises,
         loadRoutes,
+        loadInits,
         loadExits,
         execute,
     };
-}
-
-// Define preparing promises
-const preparingPromises = [];
-
-/**
- * Load promises to be executed before running the application.
- * @module src/execute
- * @param {Promise[]} promises - The promises to load.
- * @returns {object} The application invoker.
- */
-function loadPromises(promises) {
-    if (promises.length < 1) {
-        return invokeApp();
-    }
-
-    preparingPromises.push(...promises);
-    return invokeApp();
 }
 
 /**
@@ -122,29 +91,59 @@ function loadRoutes(routerNames) {
     const routerMappers = routeFilenames.map((n) => import(n));
     routerMappers.forEach((c) => c.then((f) => f.default()));
 
+    // Return application invoker
+    return invokeApp();
+}
+
+// Define initial promises
+const initPromises = [];
+
+/**
+ * Load init application handlers.
+ * @module src/execute
+ * @param {Function[]} initHandlers - The init signal handlers.
+ * @returns {object} The application invoker.
+ */
+function loadInits(initHandlers) {
+    // Handle init signals
+    const promises = initHandlers.map((f) => f());
+
+    // Push the initial handlers onto the preparing promises
+    initPromises.push(...promises);
+
+    // Return application invoker
     return invokeApp();
 }
 
 /**
  * Load exit signal handlers.
  * @module src/execute
- * @param {object} exitHandlers - The exit signal handlers.
+ * @param {Function[]} exitHandlers - The exit signal handlers.
  * @returns {object} The application invoker.
  */
 function loadExits(exitHandlers) {
     // Handle exit signals
-    const exitHandler = () => {
-        exitHandlers.forEach((f) => f());
+    const exitHandler = async () => {
+        const promises = exitHandlers.map((f) => f());
+        // Wait for all exit handlers resolved
+        await Promise.all(promises);
+        // Send exit signal
         process.exit(0);
     };
+
+    // Define exit signals
     const exitSignals = [
         "SIGINT",
         "SIGTERM",
         "SIGQUIT",
     ];
+
+    // Attach exit handlers
     exitSignals.forEach((signal) => {
         process.on(signal, exitHandler);
     });
+
+    // Return application invoker
     return invokeApp();
 }
 
@@ -157,8 +156,8 @@ async function execute() {
     // Use application
     const app = useApp();
 
-    // Wait preparing promises
-    await Promise.all(preparingPromises);
+    // Wait for all init promises resolved
+    await Promise.all(initPromises);
 
     // Get enabled protocols
     const enabledProtocols = getSplited("ENABLED_PROTOCOLS");
@@ -180,5 +179,6 @@ async function execute() {
         );
     }
 
+    // Return setup promises
     return Promise.all(setupPromises);
 }

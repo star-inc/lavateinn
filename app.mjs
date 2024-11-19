@@ -6,6 +6,11 @@ import {
     APP_NAME,
 } from "./src/init/const.mjs";
 
+// Import instance variables
+import {
+    instanceId,
+} from "./src/init/instance.mjs";
+
 // Import modules
 import {
     getNodeEnv,
@@ -13,7 +18,6 @@ import {
     getInstanceMode,
 } from "./src/config.mjs";
 import {
-    instanceId,
     invokeApp,
 } from "./src/execute.mjs";
 
@@ -22,17 +26,17 @@ import {
 } from "./src/init/logger.mjs";
 
 import {
+    initHandler as sequelizeInitHandler,
+} from "./src/init/sequelize.mjs";
+
+import {
+    initHandler as consulInitHandler,
+    exitHandler as consulExitHandler,
+} from "./src/init/consul.mjs";
+
+import {
     exitHandler as tempExitHandler,
 } from "./src/init/temp.mjs";
-
-// Define plugin promises
-const pluginPromises = [
-    new Promise((resolve) => {
-        const logger = useLogger();
-        logger.warn("The example to wait the plugin promise.");
-        setTimeout(resolve, 3000);
-    }),
-];
 
 // Define router names
 const routerNames = [
@@ -40,12 +44,23 @@ const routerNames = [
     "example",
 ];
 
+// Define init handlers
+const initHandlers = [
+    sequelizeInitHandler,
+    consulInitHandler,
+    () => {
+        const logger = useLogger();
+        logger.warn("The example to handle init signals.");
+    },
+];
+
 // Define exit handlers
 const exitHandlers = [
     tempExitHandler,
+    consulExitHandler,
     () => {
         const logger = useLogger();
-        logger.info("The example to handle exit signals.");
+        logger.warn("The example to handle exit signals.");
     },
 ];
 
@@ -63,7 +78,7 @@ const displayStatus = (protocolStatus) => {
         // Display the status
         logger.info(APP_NAME);
         logger.info("====");
-        logger.info(`Environment: ${nodeEnv}, ${runtimeEnv})`);
+        logger.info(`Environment: ${nodeEnv}, ${runtimeEnv}`);
         logger.info(`Instance: ${instanceId}, ${instanceMode}`);
         logger.info(`Protocol "${protocol}" is listening at`);
         logger.info(`${protocol}://${hostname}:${port}`);
@@ -73,8 +88,8 @@ const displayStatus = (protocolStatus) => {
 
 // Mount application and execute it
 invokeApp().
-    loadPromises(pluginPromises).
     loadRoutes(routerNames).
+    loadInits(initHandlers).
     loadExits(exitHandlers).
     execute().
     then(displayStatus);

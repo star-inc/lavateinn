@@ -1,8 +1,9 @@
-// Import modules
-
+// Import instance variables
 import {
     instanceId,
-} from "../execute.mjs";
+} from "../init/instance.mjs";
+
+// Import modules
 import {
     useApp,
     StatusCodes,

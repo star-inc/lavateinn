@@ -19,7 +19,7 @@ export default function middlewareHttpsRedirect(req, res, next) {
     // Extract the request
     const {protocol, host, url} = req;
 
-    // If the protocol is not http, skip.
+    // If the protocol is not http, skip
     if (protocol !== "http") {
         // Call next middleware
         next();

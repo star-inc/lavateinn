@@ -1,4 +1,4 @@
-// Constants
+// define application constants here.
 
 export const APP_NAME = "lavateinn";
 export const APP_DESCRIPTION =
