@@ -30,11 +30,6 @@ import {
 } from "./src/init/sequelize.mjs";
 
 import {
-    initHandler as consulInitHandler,
-    exitHandler as consulExitHandler,
-} from "./src/init/consul.mjs";
-
-import {
     exitHandler as tempExitHandler,
 } from "./src/init/temp.mjs";
 
@@ -47,7 +42,6 @@ const routerNames = [
 // Define init handlers
 const initHandlers = [
     sequelizeInitHandler,
-    consulInitHandler,
     () => {
         const logger = useLogger();
         logger.warn("The example to handle init signals.");
@@ -57,7 +51,6 @@ const initHandlers = [
 // Define exit handlers
 const exitHandlers = [
     tempExitHandler,
-    consulExitHandler,
     () => {
         const logger = useLogger();
         logger.warn("The example to handle exit signals.");
