@@ -146,11 +146,6 @@ class Cache {
  * @returns {Cache} The cached layer
  */
 export function useCache() {
-    // Make sure the Redis URL is set
-    if (!redisUrl) {
-        throw new Error("REDIS_URL is not set");
-    }
-
     // Construct the Redis client
     const client = new Redis(redisUrl, {
         keyPrefix: redisNamespace,

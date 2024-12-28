@@ -8,7 +8,8 @@ import {
 
 // Import instance variables
 import {
-    instanceId,
+    instanceContext,
+    instanceRole,
 } from "./src/init/instance.mjs";
 
 // Import modules
@@ -59,24 +60,31 @@ const exitHandlers = [
 
 // Define display
 const displayStatus = (protocolStatus) => {
-    const viewIt = ({protocol, hostname, port}) => {
-        // Use logger
-        const logger = useLogger();
-
+    // Display the status of the application
+    if (instanceRole !== "worker") {
         // Get node and runtime environment information.
         const nodeEnv = getNodeEnv();
         const runtimeEnv = getRuntimeEnv();
         const instanceMode = getInstanceMode();
 
         // Display the status
-        logger.info(APP_NAME);
-        logger.info("====");
-        logger.info(`Environment: ${nodeEnv}, ${runtimeEnv}`);
-        logger.info(`Instance: ${instanceId}, ${instanceMode}`);
-        logger.info(`Protocol "${protocol}" is listening at`);
-        logger.info(`${protocol}://${hostname}:${port}`);
-    };
-    protocolStatus.forEach(viewIt);
+        console.info(APP_NAME);
+        console.info("====");
+        console.info(`Environment: ${nodeEnv}, ${runtimeEnv}`);
+        console.info(`Instance Mode: ${instanceMode}`);
+    }
+
+    // Display the protocol status
+    if (instanceRole === "single" || instanceContext.get("workerId") === 1) {
+        // Define the view
+        const viewIt = ({protocol, hostname, port}) => {
+            console.info("----");
+            console.info(`Protocol "${protocol}" is listening at`);
+            console.info(`${protocol}://${hostname}:${port}`);
+        };
+        // Display the status
+        protocolStatus.forEach(viewIt);
+    }
 };
 
 // Mount application and execute it

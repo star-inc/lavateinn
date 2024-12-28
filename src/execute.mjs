@@ -5,7 +5,6 @@ import {
 } from "./config.mjs";
 
 import process from "node:process";
-
 import http from "node:http";
 import https from "node:https";
 
@@ -16,6 +15,12 @@ import {
 import {
     useApp,
 } from "./init/express.mjs";
+
+import {
+    instanceRole,
+    setupClusterPrimary,
+    setupClusterWorker,
+} from "./init/instance.mjs";
 
 import {
     camelToSnakeCase,
@@ -105,6 +110,12 @@ const initPromises = [];
  * @returns {object} The application invoker.
  */
 function loadInits(initHandlers) {
+    // Primary instance won't setup any init handlers
+    if (instanceRole === "primary") {
+        // Return application invoker
+        return invokeApp();
+    }
+
     // Handle init signals
     const promises = initHandlers.map((f) => f());
 
@@ -122,6 +133,12 @@ function loadInits(initHandlers) {
  * @returns {object} The application invoker.
  */
 function loadExits(exitHandlers) {
+    // Primary instance won't setup any exit handlers
+    if (instanceRole === "primary") {
+        // Return application invoker
+        return invokeApp();
+    }
+
     // Handle exit signals
     const exitHandler = async () => {
         const promises = exitHandlers.map((f) => f());
@@ -150,9 +167,20 @@ function loadExits(exitHandlers) {
 /**
  * Prepare the application and automatically detect protocols.
  * @module src/execute
- * @returns {Promise<void[]>} A promise that resolves when prepared.
+ * @returns {Promise<object|void[]>} A promise that resolves
+ * when prepared protocols, empty array returned if
+ * in cluster mode and primary instance.
  */
 async function execute() {
+    // Setup cluster
+    if (instanceRole === "primary") {
+        setupClusterPrimary();
+        return []; // The primary instance won't setup any protocol
+    }
+    if (instanceRole === "worker") {
+        await setupClusterWorker();
+    }
+
     // Use application
     const app = useApp();
 
@@ -180,5 +208,5 @@ async function execute() {
     }
 
     // Return setup promises
-    return Promise.all(setupPromises);
+    return setupPromises;
 }
