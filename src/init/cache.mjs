@@ -1,8 +1,7 @@
-// node-cache is an in-memory cache.
+// cache-layer is used for as an in-memory cache.
 
 // Import modules
-import {getMust, isCluster} from "../config.mjs";
-import NodeCache from "node-cache";
+import {getMust} from "../config.mjs";
 import Redis from "ioredis";
 
 // Read configuration
@@ -16,18 +15,6 @@ const redisNamespace = getMust("REDIS_NAMESPACE");
  */
 class Cache {
     /**
-     * The cache type.
-     * @type {string}
-     */
-    type;
-
-    /**
-     * The node-cache instance.
-     * @type {NodeCache|undefined}
-     */
-    _nodeCache;
-
-    /**
      * The redis instance.
      * @type {Redis|undefined}
      */
@@ -35,18 +22,11 @@ class Cache {
 
     /**
      * The Lavateinn cache instance.
-     * @param {Redis|NodeCache} client - The cache client.
+     * @param {Redis} client - The cache client.
      * @throws {Error} If the client is invalid.
      */
     constructor(client) {
-        if (client instanceof NodeCache) {
-            this.type = "node-cache";
-            this._nodeCache = client;
-        }
-        if (client instanceof Redis) {
-            this.type = "redis";
-            this._redisClient = client;
-        }
+        this._redisClient = client;
         throw new Error("invalid client");
     }
 
@@ -57,13 +37,7 @@ class Cache {
      * @throws {Error} If the client is invalid.
      */
     get(key) {
-        if (this.type === "node-cache") {
-            return this._nodeCache.get(key);
-        }
-        if (this.type === "redis") {
-            return this._redisClient.get(key);
-        }
-        throw new Error("invalid client");
+        return this._redisClient.get(key);
     }
 
     /**
@@ -73,13 +47,7 @@ class Cache {
      * @throws {Error} If the client is invalid.
      */
     mget(keys) {
-        if (this.type === "node-cache") {
-            return this._nodeCache.mget(keys);
-        }
-        if (this.type === "redis") {
-            return this._redisClient.mget(keys);
-        }
-        throw new Error("invalid client");
+        return this._redisClient.mget(keys);
     }
 
     /**
@@ -91,13 +59,7 @@ class Cache {
      * @throws {Error} If the client is invalid.
      */
     set(key, value, ttl) {
-        if (this.type === "node-cache") {
-            return this._nodeCache.set(key, value, ttl);
-        }
-        if (this.type === "redis") {
-            return this._redisClient.set(key, value, ttl);
-        }
-        throw new Error("invalid client");
+        return this._redisClient.set(key, value, ttl);
     }
 
     /**
@@ -107,13 +69,7 @@ class Cache {
      * @throws {Error} If the client is invalid.
      */
     mset(keyValueSet) {
-        if (this.type === "node-cache") {
-            return this._nodeCache.mset(keyValueSet);
-        }
-        if (this.type === "redis") {
-            return this._redisClient.mset(keyValueSet);
-        }
-        throw new Error("invalid client");
+        return this._redisClient.mset(keyValueSet);
     }
 
     /**
@@ -123,13 +79,7 @@ class Cache {
      * @throws {Error} If the client is invalid.
      */
     del(keys) {
-        if (this.type === "node-cache") {
-            return this._nodeCache.del(keys);
-        }
-        if (this.type === "redis") {
-            return this._redisClient.del(keys);
-        }
-        throw new Error("invalid client");
+        return this._redisClient.del(keys);
     }
 
     /**
@@ -140,13 +90,7 @@ class Cache {
      * @throws {Error} If the client is invalid.
      */
     ttl(key, ttl) {
-        if (this.type === "node-cache") {
-            return this._nodeCache.ttl(key, ttl);
-        }
-        if (this.type === "redis") {
-            return this._redisClient.expire(key, ttl);
-        }
-        throw new Error("invalid client");
+        return this._redisClient.expire(key, ttl);
     }
 
     /**
@@ -156,13 +100,7 @@ class Cache {
      * @throws {Error} If the client is invalid.
      */
     getTTL(key) {
-        if (this.type === "node-cache") {
-            return this._nodeCache.getTtl(key);
-        }
-        if (this.type === "redis") {
-            return this._redisClient.ttl(key);
-        }
-        throw new Error("invalid client");
+        return this._redisClient.ttl(key);
     }
 
     /**
@@ -171,13 +109,7 @@ class Cache {
      * @throws {Error} If the client is invalid.
      */
     keys() {
-        if (this.type === "node-cache") {
-            return this._nodeCache.keys();
-        }
-        if (this.type === "redis") {
-            return this._redisClient.keys("*");
-        }
-        throw new Error("invalid client");
+        return this._redisClient.keys("*");
     }
 
     /**
@@ -186,13 +118,7 @@ class Cache {
      * @throws {Error} If the client is invalid.
      */
     getStats() {
-        if (this.type === "node-cache") {
-            return this._nodeCache.getStats();
-        }
-        if (this.type === "redis") {
-            return this._redisClient.server_info;
-        }
-        throw new Error("invalid client");
+        return this._redisClient.server_info;
     }
 
     /**
@@ -201,13 +127,7 @@ class Cache {
      * @throws {Error} If the client is invalid.
      */
     flushAll() {
-        if (this.type === "node-cache") {
-            return this._nodeCache.flushAll();
-        }
-        if (this.type === "redis") {
-            return this._redisClient.flushall();
-        }
-        throw new Error("invalid client");
+        return this._redisClient.flushall();
     }
 
     /**
@@ -216,32 +136,26 @@ class Cache {
      * @throws {Error} If the client is invalid.
      */
     close() {
-        if (this.type === "node-cache") {
-            return this._nodeCache.close();
-        }
-        if (this.type === "redis") {
-            return this._redisClient.quit();
-        }
-        throw new Error("invalid client");
+        return this._redisClient.quit();
     }
 }
 
 /**
  * Composable cache.
  * @module src/init/cache
- * @returns {NodeCache} The cached node-cache
+ * @returns {Cache} The cached layer
  */
 export function useCache() {
-    if (!redisUrl && isCluster()) {
-        throw new Error("REDIS_URL is not set but cluster enabled");
+    // Make sure the Redis URL is set
+    if (!redisUrl) {
+        throw new Error("REDIS_URL is not set");
     }
 
-    // Determine cache mode (in-memory or redis) based on Redis URL
-    const client = redisUrl ?
-        new Redis(redisUrl, {
-            keyPrefix: redisNamespace,
-        }) :
-        new NodeCache();
+    // Construct the Redis client
+    const client = new Redis(redisUrl, {
+        keyPrefix: redisNamespace,
+    });
 
+    // Construct the cache layer
     return new Cache(client);
 }
