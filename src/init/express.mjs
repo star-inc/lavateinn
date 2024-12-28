@@ -8,6 +8,7 @@ import {StatusCodes} from "http-status-codes";
 import {getSplited, getEnabled} from "../config.mjs";
 
 // Import middleware
+import middlewareInstance from "../middleware/instance.mjs";
 import middlewareHttpsRedirect from "../middleware/https_redirect.mjs";
 import middlewareCORS from "../middleware/cors.mjs";
 import middlewareOrigin from "../middleware/origin.mjs";
@@ -21,6 +22,9 @@ const isEnabledCorsOriginCheck = getEnabled("ENABLED_CORS_ORIGIN_CHECK");
 
 // Initialize app engine
 const app = express();
+
+// Required middleware
+app.use(middlewareInstance);
 
 // Optional settings
 if (trustProxy.length) {

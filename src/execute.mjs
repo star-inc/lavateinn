@@ -1,10 +1,13 @@
 // Import modules
 import {
+    isCluster,
     getMust,
     getSplited,
 } from "./config.mjs";
 
 import process from "node:process";
+import cluster from "node:cluster";
+import os from "node:os";
 
 import http from "node:http";
 import https from "node:https";
@@ -18,8 +21,78 @@ import {
 } from "./init/express.mjs";
 
 import {
+    instanceId,
+    instanceRole,
+    instanceContext,
+} from "./init/instance.mjs";
+
+import {
     camelToSnakeCase,
 } from "./utils/native.mjs";
+
+/**
+ * Setup cluster mode for primary instance.
+ * @module src/execute
+ * @returns {void}
+ */
+function setupClusterPrimary() {
+    // Fork workers
+    const forkCount = os.availableParallelism();
+    for (let i = 0; i < forkCount; i++) {
+        cluster.fork();
+    }
+
+    // Handle worker message
+    cluster.on("message", (worker, message) => {
+        if (message.type === "startup") {
+            instanceContext.set(
+                `worker#${worker.id}`,
+                message.instanceId,
+            );
+            const primaryId = instanceId;
+            const workerId = worker.id;
+            worker.send({
+                type: "startup",
+                primaryId,
+                workerId,
+            });
+        }
+    });
+
+    // Handle worker exit
+    cluster.on("exit", (worker, code, signal) => {
+        console.warn(
+            `Cluster worker ${worker.process.pid} exits ` +
+            `with code ${code} and signal ${signal}`,
+        );
+    });
+}
+
+/**
+ * Setup cluster mode for worker instance.
+ * @module src/execute
+ * @returns {Promise<void>} A promise that resolves when setup completed.
+ */
+function setupClusterWorker() {
+    // Emit startup signal
+    process.send({
+        type: "startup",
+        instanceId,
+    });
+
+    // Wait for startup signal
+    return new Promise((resolve) => {
+        process.on("message", (message) => {
+            if (message.type === "startup") {
+                instanceContext.set(
+                    "workerId",
+                    message.workerId,
+                );
+                resolve();
+            }
+        });
+    });
+}
 
 /**
  * Setup protocol - http
@@ -150,9 +223,20 @@ function loadExits(exitHandlers) {
 /**
  * Prepare the application and automatically detect protocols.
  * @module src/execute
- * @returns {Promise<void[]>} A promise that resolves when prepared.
+ * @returns {Promise<object|void[]>} A promise that resolves
+ * when prepared protocols, empty array returned if
+ * in cluster mode and primary instance.
  */
 async function execute() {
+    // Setup cluster
+    if (isCluster() && instanceRole === "primary") {
+        setupClusterPrimary();
+        return []; // The primary instance won't setup any protocol
+    }
+    if (isCluster() && instanceRole === "worker") {
+        await setupClusterWorker();
+    }
+
     // Use application
     const app = useApp();
 
@@ -180,5 +264,5 @@ async function execute() {
     }
 
     // Return setup promises
-    return Promise.all(setupPromises);
+    return setupPromises;
 }
