@@ -60,8 +60,8 @@ const exitHandlers = [
 
 // Define display
 const displayStatus = (protocolStatus) => {
-    // Display status only for primary instance
-    if (instanceRole === "primary") {
+    // Display the status of the application
+    if (instanceRole !== "worker") {
         // Get node and runtime environment information.
         const nodeEnv = getNodeEnv();
         const runtimeEnv = getRuntimeEnv();
