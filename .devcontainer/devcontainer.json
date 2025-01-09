@@ -2,5 +2,5 @@
 	"name": "Node.js",
 	"image": "mcr.microsoft.com/devcontainers/javascript-node:1-18",
 	"forwardPorts": [3000, 3500],
-	"postCreateCommand": "npm install"
+	"postCreateCommand": "sh .devcontainer/setup.sh"
 }
