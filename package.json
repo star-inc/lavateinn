@@ -12,6 +12,8 @@
     "lint": "npx lint-staged",
     "lint:es": "eslint \"*.mjs\" \"src/**/*.mjs\"",
     "lint:es:fix": "eslint \"*.mjs\" \"src/**/*.mjs\" --fix",
+    "test": "mocha test --exit --recursive --timeout 5000",
+    "cover": "nyc mocha test --recursive --timeout 5000 --exit",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -38,9 +40,13 @@
     "eslint": "^8.17.0",
     "eslint-config-nymph": "^0.15.0",
     "eslint-plugin-jsdoc": "^48.2.3",
+    "eslint-plugin-mocha": "^10.5.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.0",
-    "nodemon": "^2.0.13"
+    "mocha": "^11.0.1",
+    "nodemon": "^2.0.13",
+    "nyc": "^17.1.0",
+    "supertest": "^7.0.0"
   },
   "config": {
     "commitizen": {

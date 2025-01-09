@@ -1,10 +1,12 @@
 {
   "plugins": [
-    "jsdoc"
+    "jsdoc",
+    "mocha"
   ],
   "extends": [
     "eslint:recommended",
     "plugin:jsdoc/recommended",
+    "plugin:mocha/recommended",
     "nymph"
   ],
   "rules": {
