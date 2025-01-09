@@ -1,17 +1,19 @@
 // Import modules
 import {existsSync} from "node:fs";
+import {fileURLToPath} from "node:url";
 import dotenv from "dotenv";
 
 /**
  * Load configs from system environment variables.
  */
 export function runLoader() {
-    const dotenvPath = new URL("../.env", import.meta.url);
+    const dotenvPathDefault = new URL("../.env.default", import.meta.url);
+    const dotenvPathInstance = new URL("../.env", import.meta.url);
 
-    const isDotEnvFileExists = existsSync(dotenvPath);
-    const isCustomDefined = get("APP_CONFIGURED") === "1";
+    const isDotenvExists = existsSync(dotenvPathInstance);
+    const isAppConfigured = get("APP_CONFIGURED") === "1";
 
-    if (!isDotEnvFileExists && !isCustomDefined) {
+    if (!isDotenvExists && !isAppConfigured) {
         console.error(
             "No '.env' file detected in app root.",
             "If you're not using dotenv file,",
@@ -21,7 +23,14 @@ export function runLoader() {
         throw new Error(".env not exists");
     }
 
-    dotenv.config();
+    const dotenvPaths = [
+        dotenvPathDefault,
+        dotenvPathInstance,
+    ].map(fileURLToPath);
+
+    dotenv.config({
+        path: dotenvPaths,
+    });
 }
 
 /**
@@ -96,7 +105,7 @@ export function getEnabled(key) {
  * @param {string} [separator] - The separator.
  * @returns {string[]} The array value.
  */
-export function getSplited(key, separator=",") {
+export function getSplited(key, separator = ",") {
     return getMust(key).
         split(separator).
         filter((s) => s).

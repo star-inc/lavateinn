@@ -83,7 +83,9 @@ const displayStatus = (protocolStatus) => {
             console.info(`${protocol}://${hostname}:${port}`);
         };
         // Display the status
-        protocolStatus.forEach(viewIt);
+        protocolStatus.
+            filter((i) => i.protocol).
+            forEach(viewIt);
     }
 };
 

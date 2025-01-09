@@ -28,6 +28,7 @@
     "nanoid": "^5.0.8",
     "rimraf": "^5.0.7",
     "sequelize": "^6.37.5",
+    "sqlite3": "^5.1.7",
     "winston": "^3.17.0"
   },
   "devDependencies": {

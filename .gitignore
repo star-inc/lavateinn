@@ -9,6 +9,7 @@
 coverage
 node_modules
 ssl_keys
+data
 dist
 
 # Log files
