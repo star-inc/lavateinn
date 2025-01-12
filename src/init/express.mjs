@@ -54,19 +54,5 @@ export function useApp() {
     return app;
 }
 
-/**
- * Wrap express async handler with Promise.
- * @module src/init/express
- * @param {express.Handler} handler - The express handler.
- * @returns {express.Handler} The wrapped express handler.
- */
-export function withAwait(handler) {
-    return (req, res, next) => {
-        Promise.resolve(handler(
-            req, res, next,
-        )).catch(next);
-    };
-}
-
 // Export express for shortcut
 export {express, StatusCodes};
