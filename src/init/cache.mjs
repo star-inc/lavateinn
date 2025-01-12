@@ -39,19 +39,23 @@ class Cache {
     /**
      * Get a cached value via its key.
      * @param {string} key - The cache key.
-     * @returns {any} The cached element.
+     * @returns {Promise<any>} The cached element.
      */
     get(key) {
-        return this._redisClient.get(key);
+        const value = this._redisClient.get(key);
+        return new Promise((resolve) => value.then(
+            (v) => resolve(JSON.parse(v)),
+        ));
     }
 
     /**
      * Get multiple cached keys at once.
      * @param {string[]} keys - An array of cache keys.
-     * @returns {any[]} An array of cached elements.
+     * @returns {Promise<any[]>} An array of cached elements.
      */
     mget(keys) {
-        return this._redisClient.mget(keys);
+        const keyValueSet = this._redisClient.mget(keys);
+        return keyValueSet.map(JSON.parse);
     }
 
     /**
@@ -59,25 +63,27 @@ class Cache {
      * @param {string} key - The cache key.
      * @param {any} value - The value to cache.
      * @param {number} ttl - The time to live for the cache.
-     * @returns {boolean} True if the key is set, false otherwise.
+     * @returns {Promise<boolean>} True if the key is set, false otherwise.
      */
     set(key, value, ttl) {
-        return this._redisClient.set(key, value, ttl);
+        value = JSON.stringify(value);
+        return this._redisClient.setex(key, ttl, value);
     }
 
     /**
      * Set multiple cached keys with the given values.
      * @param {object[]} keyValueSet - An array of object.
-     * @returns {boolean} True if all keys are set, false otherwise.
+     * @returns {Promise<boolean>} True if all keys are set, false otherwise.
      */
     mset(keyValueSet) {
+        keyValueSet = keyValueSet.map(JSON.stringify);
         return this._redisClient.mset(keyValueSet);
     }
 
     /**
      * Delete a cached values via their keys.
      * @param {string} keys - The cache key.
-     * @returns {boolean} True if the key is deleted, false otherwise.
+     * @returns {Promise<boolean>} True if the key is deleted, false otherwise.
      */
     del(keys) {
         return this._redisClient.del(keys);
@@ -87,7 +93,7 @@ class Cache {
      * Set a key's time to live in seconds.
      * @param {string} key - The cache key.
      * @param {number} ttl - The time to live for the cache.
-     * @returns {boolean} True if the key is set, false otherwise.
+     * @returns {Promise<boolean>} True if the key is set, false otherwise.
      */
     ttl(key, ttl) {
         return this._redisClient.expire(key, ttl);
@@ -96,7 +102,7 @@ class Cache {
     /**
      * Get the time to live (TTL) of a cached value.
      * @param {string} key - The cache key.
-     * @returns {number} The TTL in seconds.
+     * @returns {Promise<number>} The TTL in seconds.
      */
     getTTL(key) {
         return this._redisClient.ttl(key);
@@ -104,7 +110,7 @@ class Cache {
 
     /**
      * List all keys within this cache
-     * @returns {string[]} An array of all keys.
+     * @returns {Promise<string[]>} An array of all keys.
      */
     keys() {
         return this._redisClient.keys("*");
@@ -120,7 +126,7 @@ class Cache {
 
     /**
      * Flush the whole data and reset the cache.
-     * @returns {boolean} true if the cache is flushed.
+     * @returns {Promise<boolean>} true if the cache is flushed.
      */
     flushAll() {
         return this._redisClient.flushall();
@@ -128,7 +134,7 @@ class Cache {
 
     /**
      * This will clear the interval timeout which is set on checkperiod option.
-     * @returns {boolean} true if the cache is cleared and closed.
+     * @returns {Promise<boolean>} true if the cache is cleared and closed.
      */
     close() {
         return this._redisClient.quit();
