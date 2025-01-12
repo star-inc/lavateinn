@@ -24,8 +24,8 @@ export function runLoader() {
     }
 
     const dotenvPaths = [
-        dotenvPathDefault,
         dotenvPathInstance,
+        dotenvPathDefault,
     ].map(fileURLToPath);
 
     dotenv.config({
