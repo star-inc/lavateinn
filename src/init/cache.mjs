@@ -143,7 +143,7 @@ class Cache {
 export function useCache() {
     // Construct the Redis client
     const client = new Redis(redisUrl, {
-        keyPrefix: redisNamespace,
+        keyPrefix: `${redisNamespace}:`,
     });
 
     // Construct the cache layer
