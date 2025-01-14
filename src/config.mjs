@@ -112,8 +112,8 @@ export function getEnabled(key) {
 export function getSplited(key, separator = ",") {
     return getMust(key).
         split(separator).
-        filter((s) => s).
-        map((s) => s.trim());
+        filter((i) => i).
+        map((i) => i.trim());
 }
 
 /**

@@ -43,7 +43,7 @@ const logger = winston.createLogger({
         useLoggingConsole(),
         useLoggingHttp(),
         useLoggingFile(),
-    ],
+    ].filter((i) => i),
     level: loggingLevel,
 });
 
