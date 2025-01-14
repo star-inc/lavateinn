@@ -85,7 +85,11 @@ export function isCluster() {
  * @returns {string} The config value.
  */
 export function get(key) {
-    return process.env[key];
+    const value = process.env[key];
+    if (value === "_disabled_") {
+        return "";
+    }
+    return value;
 }
 
 /**
