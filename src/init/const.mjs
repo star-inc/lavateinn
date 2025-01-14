@@ -5,7 +5,7 @@ export const APP_DESCRIPTION =
     "Tiny and flexible microservice framework for fast development.";
 
 export const APP_VERSION = "latest"; // SemVer
-export const LAV_VERSION = "2025.01.13"; // CalVer, UTC +8
+export const LAV_VERSION = "2025.01.14"; // CalVer, UTC +8
 
 export const APP_AUTHOR_NAME = "Star Inc.";
 export const APP_AUTHOR_URL = "https://starinc.xyz";
