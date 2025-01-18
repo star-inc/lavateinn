@@ -1,3 +1,6 @@
+// Lavateinn - Tiny and flexible microservice framework.
+// SPDX-License-Identifier: BSD-3-Clause (https://ncurl.xyz/s/mI23sevHR)
+
 // The simple toolbox for fetching visitor information from HTTP request.
 
 import {isProduction} from "../config.mjs";

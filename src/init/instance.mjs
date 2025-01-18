@@ -1,3 +1,6 @@
+// Lavateinn - Tiny and flexible microservice framework.
+// SPDX-License-Identifier: BSD-3-Clause (https://ncurl.xyz/s/mI23sevHR)
+
 // define application instance variables here.
 // to be used for identity in clusters.
 

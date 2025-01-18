@@ -4,7 +4,7 @@
   "description": "Tiny and flexible microservice framework for fast development.",
   "author": "Star Inc.",
   "homepage": "https://starinc.xyz",
-  "license": "MIT",
+  "license": "BSD-3-Clause",
   "main": "app.mjs",
   "scripts": {
     "dev": "nodemon app.mjs",

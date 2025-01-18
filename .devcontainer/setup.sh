@@ -1,7 +1,6 @@
 #!/bin/bash
-# Lavateinn Devcontainer Setup Script
-# SPDX-License-Identifier: MIT
-# (c) 2024 Star Inc.
+# Lavateinn - Tiny and flexible microservice framework.
+# SPDX-License-Identifier: BSD-3-Clause (https://ncurl.xyz/s/mI23sevHR)
 
 # Shell options
 set -e

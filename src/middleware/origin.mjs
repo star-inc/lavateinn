@@ -1,3 +1,6 @@
+// Lavateinn - Tiny and flexible microservice framework.
+// SPDX-License-Identifier: BSD-3-Clause (https://ncurl.xyz/s/mI23sevHR)
+
 // Check the header "Origin" in the request is equal to CORS_ORIGIN,
 // if not, interrupt it.
 

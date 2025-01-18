@@ -1,3 +1,6 @@
+// Lavateinn - Tiny and flexible microservice framework.
+// SPDX-License-Identifier: BSD-3-Clause (https://ncurl.xyz/s/mI23sevHR)
+
 // Interrupt the request
 // which is not satisfied with the result from express-validator.
 
