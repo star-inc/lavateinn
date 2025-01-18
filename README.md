@@ -75,6 +75,6 @@ Example to show current POSIX timestamp.
 
 ## License
 
-Lævateinn is the microservice framework with [MIT licensed](LICENSE).
+Lævateinn is the microservice framework with [BSD-3-Clause licensed](LICENSE).
 
-> (c) 2024 [Star Inc.](https://starinc.xyz)
+> (c) 2025 [Star Inc.](https://starinc.xyz)
