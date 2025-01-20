@@ -20,6 +20,7 @@
     "*.mjs": "eslint"
   },
   "dependencies": {
+    "amqplib": "^0.10.5",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^5.0.1",
