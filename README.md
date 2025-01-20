@@ -101,13 +101,11 @@ The primary structure of the framework is as follows:
 
 The framework uses the `dotenv` package to read the configuration from the `.env` file.
 
-There is a `.env.default` file in the root directory of the project presents the default configuration,
-you can copy it to the `.env` file to override the default configuration.
+There is a `.env.default` file in the root directory of the project, presenting as the default configuration.
+You can copy it to the `.env` file to override the default configuration.
 
 If there is no `.env` file exists (such as setting configuration via system environment variables),
-you have to set `APP_CONFIGURED=1` in the environment variables to start the service.
-
-Otherwise, the service will get an fatal error and exit.
+you have to set `APP_CONFIGURED=1` in the environment variables to start the service. Otherwise, the service will get a fatal error and exit.
 
 ## Dependencies
 
