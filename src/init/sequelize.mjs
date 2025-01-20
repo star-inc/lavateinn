@@ -27,9 +27,6 @@ const sequelizeOptions = {
  * Initialize the sequelize.
  */
 export const initHandler = async () => {
-    // If the sequelize URL is not provided, skip
-    if (!sequelizeUrl) return;
-
     // Import models
     await import("../models/index.mjs");
 
