@@ -29,6 +29,8 @@ function getPathKey(req, isParam) {
 
 /**
  * @callback ForbiddenCallback
+ * @param {number} actual - The actual number of requests.
+ * @param {number} expect - The expected number of requests.
  * @returns {void}
  */
 
@@ -90,7 +92,7 @@ export default function useMiddlewareRestrictor(
             res.sendStatus(StatusCodes.TOO_MANY_REQUESTS);
 
             // Call the custom callback
-            customForbiddenCallback?.();
+            customForbiddenCallback?.(keyValue, max);
 
             // Increase the value
             increaseValue();
