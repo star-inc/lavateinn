@@ -3,12 +3,6 @@
 
 // The simple toolbox for Node.js
 
-import {
-    createHash,
-    createHmac,
-    randomBytes,
-} from "node:crypto";
-
 /**
  * Get POSIX Timestamp in seconds.
  * @module src/utils/native
@@ -51,51 +45,4 @@ export function snakeToCamelCase(str) {
     return str.toLowerCase().replace(/([-_][a-z])/g, (group) =>
         group.toUpperCase().replace("-", "").replace("_", ""),
     );
-}
-
-/**
- * Create cryptographic random code.
- * @module src/utils/native
- * @param {number} length - Length of code.
- * @returns {string} The random code.
- */
-export function randomCode(length) {
-    const maxValue = (10 ** length) - 1;
-    return crypto.
-        randomInt(0, maxValue).
-        toString().
-        padStart(length, "0");
-}
-
-/**
- * Create cryptographic random string.
- * @module src/utils/native
- * @param {number} length - Length of string.
- * @returns {string} The random string.
- */
-export function randomString(length) {
-    const seed = randomBytes(length);
-    return seed.toString("base64url").substring(0, length);
-}
-
-/**
- * Hash string into hash hex.
- * @module src/utils/native
- * @param {string} data - The input data.
- * @param {string} [algo] - The algorithm to use.
- * @returns {string} The hash hex.
- */
-export function hash2hex(data, algo="md5") {
-    return createHash(algo).update(data).digest("hex");
-}
-
-/**
- * Hash string into hash hex.
- * @module src/utils/native
- * @param {string} data - The input data.
- * @param {string} [algo] - The algorithm to use.
- * @returns {string} The hash hex.
- */
-export function hmac2hex(data, algo="md5") {
-    return createHmac(algo).update(data).digest("hex");
 }
