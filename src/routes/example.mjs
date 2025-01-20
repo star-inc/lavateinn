@@ -7,9 +7,12 @@ import {
     getRuntimeEnv,
     getInstanceMode,
 } from "../config.mjs";
+
 import {useApp, express, StatusCodes} from "../init/express.mjs";
+import {useQueue} from "../init/queue.mjs";
 
 import * as utilVisitor from "../utils/visitor.mjs";
+import * as utilCrypto from "../utils/crypto.mjs";
 import * as utilNative from "../utils/native.mjs";
 
 import middlewareValidator from "express-validator";
@@ -118,6 +121,9 @@ router.get("/empty",
     },
 );
 
+// Define the trusted code
+const trustedCode = "qwertyuiop";
+
 /**
  * >openapi
  * /example/guess/{code}:
@@ -139,16 +145,52 @@ router.get("/empty",
  *       403:
  *         description: Returns "Forbidden" if the answer is wrong.
  */
-const trustedCode = "qwertyuiop";
 router.get("/guess/:code",
     middlewareRestrictor(5, 30, true),
     (req, res) => {
         const untrustedCode = req.params.code;
-        if (untrustedCode !== trustedCode) {
+        if (!utilCrypto.timingSafeEqualString(untrustedCode, trustedCode)) {
             res.sendStatus(StatusCodes.FORBIDDEN);
             return;
         }
         res.send(`Hello! ${trustedCode}`);
+    },
+);
+
+// Subscribe to the queue
+{
+    const queue = await useQueue();
+    queue.subscribe("example", (message) => {
+        const code = message.content.toString();
+        console.log(`Received: ${code}`);
+    });
+}
+
+/**
+ * >openapi
+ * /example/queue/{content}:
+ *   get:
+ *     tags:
+ *       - example
+ *     summary: Test queue works
+ *     description: Example to show how the queue works.
+ *     parameters:
+ *       - in: path
+ *         name: content
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The queue content.
+ *     responses:
+ *       201:
+ *         description: Returns "Accepted" if the content is queued.
+ */
+router.get("/queue/:content",
+    async (req, res) => {
+        const queue = await useQueue();
+        const queueContent = Buffer.from(req.params.content);
+        queue.deliver("example", queueContent);
+        res.sendStatus(StatusCodes.ACCEPTED);
     },
 );
 
