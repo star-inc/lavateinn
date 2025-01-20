@@ -28,6 +28,9 @@ import {
 import {
     useLogger,
 } from "./src/init/logger.mjs";
+import {
+    addInitTask,
+} from "./src/init/scheduler.mjs";
 
 import {
     initHandler as sequelizeInitHandler,
@@ -49,6 +52,7 @@ const initHandlers = [
     () => {
         const logger = useLogger();
         logger.warn("The example to handle init signals.");
+        addInitTask("* * * * *", "example");
     },
 ];
 
