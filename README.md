@@ -9,6 +9,16 @@ The framework is recommended to be used on light payload tasks.
 
 ![lavateinn](logo.png)
 
+## Dependencies
+
+The framework is required to have the following services running:
+
+- Sequelize -  As the database to store the persistent data,
+  using SQLite default for the development purpose,
+  please change it to the other database for the production environment.
+- Redis/Valkey - As the in-service memory for storing the cache data.
+- RabbitMQ - As the message broker to send the message between services.
+
 ## Installation
 
 Install the dependencies.
@@ -42,6 +52,7 @@ you should write the API documentation in the `README.md` file.
 For example,
 
 the one jsdoc of OpenAPIs':
+
 ```js
 /**
  * >openapi
