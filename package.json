@@ -10,8 +10,8 @@
     "dev": "nodemon app.mjs",
     "start": "node app.mjs",
     "lint": "npx lint-staged",
-    "lint:es": "eslint \"*.mjs\" \"src/**/*.mjs\"",
-    "lint:es:fix": "eslint \"*.mjs\" \"src/**/*.mjs\" --fix",
+    "lint:es": "eslint .",
+    "lint:es:fix": "eslint . --fix",
     "test": "mocha test --exit --recursive --timeout 5000",
     "cover": "nyc mocha test --recursive --timeout 5000 --exit",
     "prepare": "husky install"
@@ -38,6 +38,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",
+    "chai": "^5.1.2",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.17.0",
     "eslint-config-nymph": "^0.15.0",

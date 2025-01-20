@@ -1,4 +1,5 @@
 {
+  "root": true,
   "plugins": [
     "jsdoc",
     "mocha"
@@ -30,5 +31,32 @@
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 2023
-  }
+  },
+  "overrides": [
+    {
+      "files": [
+        "test/**/*.mjs"
+      ],
+      "rules": {
+        "max-len": "off"
+      },
+      "env": {
+        "mocha": true
+      }
+    },
+    {
+      "files": [
+        "src/models/*.mjs"
+      ],
+      "rules": {
+        "new-cap": "off"
+      }
+    },
+    {
+      "files": [
+        "*.mjs",
+        "src/**/*.mjs"
+      ]
+    }
+  ]
 }
