@@ -7,11 +7,17 @@
 import schedule from "node-schedule";
 
 /**
+ * @callback TaskCallback
+ * @param {Date} date - The date.
+ * @returns {void}
+ */
+
+/**
  * Create the task callback by its name.
  * @module src/init/scheduler
  * @param {string} name - The task name.
  * @param {object} [options] - The task options.
- * @returns {Function} The callback function.
+ * @returns {TaskCallback} The callback function.
  */
 function createTaskCallback(name, options) {
     const methodDirectory = new URL("../tasks/", import.meta.url);

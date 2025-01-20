@@ -28,6 +28,11 @@ function getPathKey(req, isParam) {
 }
 
 /**
+ * @callback ForbiddenCallback
+ * @returns {void}
+ */
+
+/**
  * Construct a middleware handler for restricting the request.
  * @module src/middleware/restrictor
  * @param {number} max - The maximum number of requests allowed per IP address.
@@ -37,8 +42,8 @@ function getPathKey(req, isParam) {
  * @param {boolean} isParam - The flag to remove the last path from the key.
  * @param {number} [customForbiddenStatus] - The custom status code for
  * forbidden requests, optional.
- * @param {Function} [customForbiddenCallback] - The custom callback for
- * forbidden requests, optional.
+ * @param {ForbiddenCallback} [customForbiddenCallback] - The custom callback
+ * for forbidden requests, optional.
  * @returns {express.Handler} The middleware handler.
  */
 export default function useMiddlewareRestrictor(

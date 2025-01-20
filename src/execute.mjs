@@ -107,9 +107,14 @@ function loadRoutes(routerNames) {
 const initPromises = [];
 
 /**
+ * @callback VoidCallback
+ * @returns {Promise<void>|void}
+ */
+
+/**
  * Load init application handlers.
  * @module src/execute
- * @param {Function[]} initHandlers - The init signal handlers.
+ * @param {VoidCallback[]} initHandlers - The init signal handlers.
  * @returns {object} The application invoker.
  */
 function loadInits(initHandlers) {
@@ -132,7 +137,7 @@ function loadInits(initHandlers) {
 /**
  * Load exit signal handlers.
  * @module src/execute
- * @param {Function[]} exitHandlers - The exit signal handlers.
+ * @param {VoidCallback[]} exitHandlers - The exit signal handlers.
  * @returns {object} The application invoker.
  */
 function loadExits(exitHandlers) {
@@ -168,9 +173,9 @@ function loadExits(exitHandlers) {
 }
 
 /**
- * Prepare the application and automatically detect protocols.
+ * Prepare the application and detect protocols automatically.
  * @module src/execute
- * @returns {Promise<object|void[]>} A promise that resolves
+ * @returns {Promise<object[]>} A promise that resolves
  * when prepared protocols, empty array returned if
  * in cluster mode and primary instance.
  */

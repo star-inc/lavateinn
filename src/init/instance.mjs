@@ -42,10 +42,16 @@ export const instanceContext = new Map();
 const messageBox = new events.EventEmitter();
 
 /**
+ * @callback MessageListener
+ * @param {...any} args - The message arguments.
+ * @returns {void}
+ */
+
+/**
  * Register message listener.
  * @module src/init/instance
  * @param {string} type - The message type.
- * @param {Function} listener - The message listener.
+ * @param {MessageListener} listener - The message listener.
  * @returns {void}
  */
 export function onMessage(type, listener) {

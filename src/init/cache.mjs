@@ -14,7 +14,7 @@ const redisNamespace = getMust("REDIS_NAMESPACE");
 /**
  * Lavateinn Cache.
  * @class Cache
- * The unified cache layer for the application.
+ * The unified cache-layer for the application.
  */
 class Cache {
     /**
@@ -33,7 +33,7 @@ class Cache {
 
     /**
      * Get the raw ioredis client.
-     * @returns {any} The client.
+     * @returns {Redis} The client.
      */
     rawClient() {
         return this._redisClient;
@@ -147,7 +147,7 @@ class Cache {
 /**
  * Composable cache.
  * @module src/init/cache
- * @returns {Cache} The cached layer
+ * @returns {Cache} The cache-layer
  */
 export function useCache() {
     // Construct the Redis client
@@ -155,6 +155,6 @@ export function useCache() {
         keyPrefix: `${redisNamespace}:`,
     });
 
-    // Construct the cache layer
+    // Construct the cache-layer
     return new Cache(client);
 }
