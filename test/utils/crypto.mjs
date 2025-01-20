@@ -50,7 +50,7 @@ describe("Crypto", function() {
             const data = "inputString";
             const hash = hash2hex(data);
             assert.isString(hash);
-            assert.lengthOf(hash, 32); // md5 hash length
+            assert.lengthOf(hash, 64); // sha3-256 hash length
         });
     });
 
@@ -60,7 +60,7 @@ describe("Crypto", function() {
             const secret = "secretKey";
             const hmac = hmac2hex(data, secret);
             assert.isString(hmac);
-            assert.lengthOf(hmac, 32); // md5 hmac length
+            assert.lengthOf(hmac, 64); // sha3-256 hash length
         });
     });
 });

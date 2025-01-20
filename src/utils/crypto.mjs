@@ -55,10 +55,10 @@ export function randomString(length) {
  * Hash string into hash hex.
  * @module src/utils/crypto
  * @param {string} data - The input data.
- * @param {string} [algo] - The algorithm to use.
+ * @param {string} [algo] - The algorithm to use, default is sha3-256.
  * @returns {string} The hash hex.
  */
-export function hash2hex(data, algo="md5") {
+export function hash2hex(data, algo="sha3-256") {
     return createHash(algo).update(data).digest("hex");
 }
 
@@ -67,9 +67,9 @@ export function hash2hex(data, algo="md5") {
  * @module src/utils/crypto
  * @param {string} data - The input data.
  * @param {string} secret - The secret key.
- * @param {string} [algo] - The algorithm to use.
+ * @param {string} [algo] - The algorithm to use, default is sha3-256.
  * @returns {string} The hash hex.
  */
-export function hmac2hex(data, secret, algo="md5") {
+export function hmac2hex(data, secret, algo="sha3-256") {
     return createHmac(algo, secret).update(data).digest("hex");
 }
