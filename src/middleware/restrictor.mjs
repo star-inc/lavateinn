@@ -37,10 +37,14 @@ function getPathKey(req, isParam) {
  * @param {boolean} isParam - The flag to remove the last path from the key.
  * @param {number} [customForbiddenStatus] - The custom status code for
  * forbidden requests, optional.
+ * @param {Function} [customForbiddenCallback] - The custom callback for
+ * forbidden requests, optional.
  * @returns {express.Handler} The middleware handler.
  */
 export default function useMiddlewareRestrictor(
-    max, ttl, isParam, customForbiddenStatus=null,
+    max, ttl, isParam,
+    customForbiddenStatus=null,
+    customForbiddenCallback=null,
 ) {
     /**
      * Middleware for restricting the request.
@@ -52,14 +56,18 @@ export default function useMiddlewareRestrictor(
      * @returns {void}
      */
     function middlewareRestrictor(req, res, next) {
+        // Define the query key
         const pathKey = getPathKey(req, isParam);
-        const visitorKey = getIPAddress(req);
-        const queryKey = ["restrictor", pathKey, visitorKey].join(":");
+        const ipAddress = getIPAddress(req);
+        const queryKey = ["restrictor", pathKey, ipAddress].join(":");
 
+        // Get the cache instance
         const cache = useCache();
 
+        // Get the key value
         const keyValue = cache.get(queryKey);
 
+        // Define the increase value function
         const increaseValue = () => {
             const offset = keyValue ? keyValue + 1 : 1;
             cache.set(queryKey, offset, ttl);
@@ -72,26 +80,39 @@ export default function useMiddlewareRestrictor(
                 `actual "${keyValue}"`,
                 `expect "${max}"`,
             );
+
+            // Send the response
             res.sendStatus(StatusCodes.TOO_MANY_REQUESTS);
+
+            // Call the custom callback
+            customForbiddenCallback?.();
+
+            // Increase the value
             increaseValue();
+
+            // Return
             return;
         }
 
-        let forbiddenStatus = StatusCodes.FORBIDDEN;
-        if (customForbiddenStatus) {
-            forbiddenStatus = customForbiddenStatus;
-        }
-
         res.on("finish", () => {
+            // Define the forbidden status code
+            const forbiddenStatus = (
+                customForbiddenStatus ?? StatusCodes.FORBIDDEN
+            );
+
+            // Check if the response status code is not forbidden
             if (res.statusCode !== forbiddenStatus) {
                 return;
             }
+
             // Log the warning
             logger.warn(
                 "An forbidden request detected:",
                 forbiddenStatus,
                 queryKey,
             );
+
+            // Increase the value
             increaseValue();
         });
 
