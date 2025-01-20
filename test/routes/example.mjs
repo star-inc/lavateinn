@@ -1,16 +1,20 @@
 // Lavateinn - Tiny and flexible microservice framework.
 // SPDX-License-Identifier: BSD-3-Clause (https://ncurl.xyz/s/mI23sevHR)
 
+import "../../src/init/config.mjs";
+
 import {describe, it} from "mocha";
 import {expect} from "chai";
 import request from "supertest";
 
-import {useApp, StatusCodes} from "../src/init/express.mjs";
+import {useApp, StatusCodes} from "../../src/init/express.mjs";
+import mountRoute from "../../src/routes/example.mjs";
 
 describe("Example Routes", () => {
     let app;
 
     before(function() {
+        mountRoute();
         app = useApp();
     });
 
