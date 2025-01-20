@@ -66,9 +66,10 @@ export function hash2hex(data, algo="md5") {
  * Hash string into hash hex.
  * @module src/utils/crypto
  * @param {string} data - The input data.
+ * @param {string} secret - The secret key.
  * @param {string} [algo] - The algorithm to use.
  * @returns {string} The hash hex.
  */
-export function hmac2hex(data, algo="md5") {
-    return createHmac(algo).update(data).digest("hex");
+export function hmac2hex(data, secret, algo="md5") {
+    return createHmac(algo, secret).update(data).digest("hex");
 }
