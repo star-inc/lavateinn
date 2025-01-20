@@ -6,6 +6,7 @@
 import {
     createHash,
     createHmac,
+    randomInt,
     randomBytes,
     timingSafeEqual,
 } from "node:crypto";
@@ -33,8 +34,7 @@ export function timingSafeEqualString(dataX, dataY) {
  */
 export function randomCode(length) {
     const maxValue = (10 ** length) - 1;
-    return crypto.
-        randomInt(0, maxValue).
+    return randomInt(0, maxValue).
         toString().
         padStart(length, "0");
 }
@@ -46,8 +46,9 @@ export function randomCode(length) {
  * @returns {string} The random string.
  */
 export function randomString(length) {
-    const seed = randomBytes(length);
-    return seed.toString("base64url").substring(0, length);
+    return randomBytes(length).
+        toString("base64url").
+        substring(0, length);
 }
 
 /**
