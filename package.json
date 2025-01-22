@@ -1,11 +1,16 @@
 {
   "name": "lavateinn",
+  "private": true,
   "version": "1.0.0",
   "description": "Tiny and flexible microservice framework for fast development.",
   "author": "Star Inc.",
-  "homepage": "https://starinc.xyz",
+  "homepage": "https://github.com/star-inc/lavateinn",
+  "repository": "https://github.com/star-inc/lavateinn",
   "license": "BSD-3-Clause",
   "main": "app.mjs",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "dev": "nodemon app.mjs",
     "start": "node app.mjs",

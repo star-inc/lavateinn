@@ -11,6 +11,8 @@ The framework is recommended to be used on light loading tasks.
 
 ## Prerequisites
 
+Lævateinn is required working with `Node.js 18` or later.
+
 The framework is designed to be used with the following data storage:
 
 - Sequelize - As the database interface to store the persistent data,
@@ -18,6 +20,14 @@ The framework is designed to be used with the following data storage:
   please change it to the other database for the production environment.
 - Redis/Valkey - As the in-service memory for storing the cache data.
 - RabbitMQ - As the message broker to send the message between services.
+
+## Get Started
+
+To create a new project with Lævateinn, you can use the following command:
+
+```sh
+npm init @lavateinn
+```
 
 ## System Architecture
 
@@ -49,7 +59,7 @@ the controller class:
 
 ```js
 // src/controllers/example.mjs
-import ExampleService from '../services/example.mjs';
+import ExampleService from "../services/example.mjs";
 
 const exampleService = new ExampleService();
 
@@ -63,12 +73,12 @@ the route mapping:
 
 ```js
 // src/routes/example.mjs
-import { useApp } from '../init/express.mjs';
-import { getNow } from '../controllers/example.mjs';
+import { useApp } from "../init/express.mjs";
+import { getNow } from "../controllers/example.mjs";
 
 export default () => {
     const app = useApp();
-    app.get('/example/now', getNow);
+    app.get("/example/now", getNow);
 };
 ```
 
