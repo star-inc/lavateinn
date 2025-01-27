@@ -1,6 +1,6 @@
 {
 	"name": "Node.js",
-	"image": "mcr.microsoft.com/devcontainers/javascript-node:1-18",
+	"image": "mcr.microsoft.com/devcontainers/javascript-node:1-20-bookworm",
 	"forwardPorts": [3000, 3500],
 	"postCreateCommand": "sh .devcontainer/setup.sh"
 }

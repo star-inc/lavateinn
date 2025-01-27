@@ -11,7 +11,7 @@ The framework is recommended to be used on light loading tasks.
 
 ## Prerequisites
 
-Lævateinn is required working with `Node.js 18` or later.
+Lævateinn is required working with `Node.js 20` or later.
 
 The framework is designed to be used with the following data storage:
 
