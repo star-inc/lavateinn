@@ -14,11 +14,12 @@ fi
 # Update package list
 $SUDO apt-get update
 
-# Install redis-server
-$SUDO apt-get install -y redis-server
+# Install required servers
+$SUDO apt-get install -y redis-server rabbitmq-server
 
-# Start redis-server
+# Start required servers
 $SUDO service redis-server start
+$SUDO service rabbitmq-server start
 
 # Install nodejs packages
 npm install
