@@ -40,6 +40,15 @@ class Cache {
     }
 
     /**
+     * Check if a key exists in the cache.
+     * @param {string} key - The cache key.
+     * @returns {boolean} True if the key exists, false otherwise.
+     */
+    has(key) {
+        return this._redisClient.exists(key);
+    }
+
+    /**
      * Get a cached value via its key.
      * @param {string} key - The cache key.
      * @returns {Promise<any>} The cached element.
