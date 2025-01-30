@@ -123,6 +123,9 @@ it works as same as empty value does (`_disabled_` will be converted to an empty
 If there is no `.env` file exists (such as setting configuration via system environment variables),
 you have to set `APP_CONFIGURED=1` in the environment variables to start the service. Otherwise, the service will get a fatal error and exit.
 
+The priority of the configuration is as follows:
+`system environment variables` > `.env` > `.env.default`
+
 ## Dependencies
 
 Install the package dependencies.
