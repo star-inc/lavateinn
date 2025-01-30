@@ -9,12 +9,12 @@ import sequelize, {
 } from "sequelize";
 
 import {
-    getMust,
+    get,
     isProduction,
 } from "../config.mjs";
 
 // Read configuration
-const sequelizeUrl = getMust("SEQUELIZE_URL");
+const sequelizeUrl = get("SEQUELIZE_URL");
 
 /**
  * @type {sequelize.Options}

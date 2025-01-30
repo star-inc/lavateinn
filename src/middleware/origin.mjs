@@ -5,7 +5,7 @@
 // if not, interrupt it.
 
 // Import modules
-import {getMust} from "../config.mjs";
+import {get} from "../config.mjs";
 import {express, StatusCodes} from "../init/express.mjs";
 import {useLogger} from "../init/logger.mjs";
 
@@ -34,7 +34,7 @@ export default function middlewareOrigin(req, res, next) {
 
     // Get actual and expected URLs
     const actualUrl = req.header("origin");
-    const expectedUrl = getMust("CORS_ORIGIN");
+    const expectedUrl = get("CORS_ORIGIN");
 
     // Origin match
     if (actualUrl === expectedUrl) {

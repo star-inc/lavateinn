@@ -5,13 +5,13 @@
 
 // Import modules
 import winston from "winston";
-import {getMust, getEnabled} from "../config.mjs";
+import {get, getEnabled} from "../config.mjs";
 
 // Read configuration
-const loggingLevel = getMust("LOGGING_LEVEL");
+const loggingLevel = get("LOGGING_LEVEL");
 const isLoggingConsole = getEnabled("LOGGING_CONSOLE");
-const loggingFilePath = getMust("LOGGING_FILE_PATH");
-const loggingHttpUrl = getMust("LOGGING_HTTP_URL");
+const loggingFilePath = get("LOGGING_FILE_PATH");
+const loggingHttpUrl = get("LOGGING_HTTP_URL");
 
 // Define logging configuration
 const useLoggingConsole = () => isLoggingConsole &&

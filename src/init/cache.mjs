@@ -4,12 +4,12 @@
 // cache-layer is used for as an in-memory cache.
 
 // Import modules
-import {getMust} from "../config.mjs";
+import {get} from "../config.mjs";
 import Redis from "ioredis";
 
 // Read configuration
-const redisUrl = getMust("REDIS_URL");
-const redisNamespace = getMust("REDIS_NAMESPACE");
+const redisUrl = get("REDIS_URL");
+const redisNamespace = get("REDIS_NAMESPACE");
 
 /**
  * Lavateinn Cache.

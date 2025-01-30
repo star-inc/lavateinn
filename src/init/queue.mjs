@@ -4,7 +4,7 @@
 // queue-layer is used for delivering messages between services.
 
 // Import modules
-import {getMust} from "../config.mjs";
+import {get} from "../config.mjs";
 import amqp from "amqplib";
 
 import {
@@ -12,7 +12,7 @@ import {
 } from "./instance.mjs";
 
 // Read configuration
-const amqpUrl = getMust("AMPQ_URL");
+const amqpUrl = get("AMPQ_URL");
 
 /**
  * Lavateinn Queue.

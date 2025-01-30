@@ -14,7 +14,12 @@ export function runLoader() {
     const dotenvPathInstance = new URL("../.env", import.meta.url);
 
     const isDotenvExists = existsSync(dotenvPathInstance);
-    const isAppConfigured = get("APP_CONFIGURED") === "1";
+
+    // Check the application configured or not,
+    // '1' means it won't check the .env file exists.
+    // It can't be set by any .env file, because it'll check
+    // the system environment variables directly before loading the .env files.
+    const isAppConfigured = process.env["APP_CONFIGURED"] === "1";
 
     if (!isDotenvExists && !isAppConfigured) {
         console.error(
@@ -42,7 +47,7 @@ export function runLoader() {
  * @returns {string} The NODE_ENV value.
  */
 export function getNodeEnv() {
-    return getFallback("NODE_ENV", "development");
+    return get("NODE_ENV");
 }
 
 /**
@@ -51,7 +56,7 @@ export function getNodeEnv() {
  * @returns {string} The RUNTIME_ENV value.
  */
 export function getRuntimeEnv() {
-    return getFallback("RUNTIME_ENV", "native");
+    return get("RUNTIME_ENV");
 }
 
 /**
@@ -60,7 +65,7 @@ export function getRuntimeEnv() {
  * @returns {string} The INSTANCE_MODE value.
  */
 export function getInstanceMode() {
-    return getFallback("INSTANCE_MODE", "single");
+    return get("INSTANCE_MODE");
 }
 
 /**
@@ -82,13 +87,17 @@ export function isCluster() {
 }
 
 /**
- * Shortcut to get config value.
+ * Get the value from config or with an error thrown.
  * @module src/config
  * @param {string} key - The config key.
  * @returns {string} The config value.
+ * @throws {Error} If value is undefined, throw an error.
  */
 export function get(key) {
     const value = process.env[key];
+    if (value === undefined) {
+        throw new Error(`config key ${key} is undefined`);
+    }
     if (value === "_disabled_") {
         return "";
     }
@@ -102,7 +111,7 @@ export function get(key) {
  * @returns {boolean} The boolean value.
  */
 export function getEnabled(key) {
-    return getMust(key) === "yes";
+    return get(key) === "yes";
 }
 
 /**
@@ -113,34 +122,8 @@ export function getEnabled(key) {
  * @returns {string[]} The array value.
  */
 export function getSplited(key, separator = ",") {
-    return getMust(key).
+    return get(key).
         split(separator).
         filter((i) => i).
         map((i) => i.trim());
-}
-
-/**
- * Get the value from config with error thrown.
- * @module src/config
- * @param {string} key - The config key.
- * @returns {string} The expected value.
- * @throws {Error} If value is undefined, throw an error.
- */
-export function getMust(key) {
-    const value = get(key);
-    if (value === undefined) {
-        throw new Error(`config key ${key} is undefined`);
-    }
-    return value;
-}
-
-/**
- * Get the value from config with fallback.
- * @module src/config
- * @param {string} key - The config key.
- * @param {string} fallback - The fallback value.
- * @returns {string} The expected value.
- */
-export function getFallback(key, fallback) {
-    return get(key) || fallback;
 }

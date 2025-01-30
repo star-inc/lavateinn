@@ -3,7 +3,7 @@
 
 // Import modules
 import {
-    getMust,
+    get,
     getSplited,
 } from "./config.mjs";
 
@@ -37,8 +37,8 @@ import {
  */
 function setupHttpProtocol(app) {
     const protocol = "http";
-    const hostname = getMust("HTTP_HOSTNAME");
-    const port = parseInt(getMust("HTTP_PORT"));
+    const hostname = get("HTTP_HOSTNAME");
+    const port = parseInt(get("HTTP_PORT"));
 
     const httpServer = http.createServer({}, app);
     httpServer.listen(port, hostname);
@@ -54,12 +54,12 @@ function setupHttpProtocol(app) {
  */
 async function setupHttpsProtocol(app) {
     const protocol = "https";
-    const hostname = getMust("HTTPS_HOSTNAME");
-    const port = parseInt(getMust("HTTPS_PORT"));
+    const hostname = get("HTTPS_HOSTNAME");
+    const port = parseInt(get("HTTPS_PORT"));
 
     const [key, cert] = await Promise.all([
-        readFile(getMust("HTTPS_KEY_PATH")),
-        readFile(getMust("HTTPS_CERT_PATH")),
+        readFile(get("HTTPS_KEY_PATH")),
+        readFile(get("HTTPS_CERT_PATH")),
     ]);
 
     const httpsServer = https.createServer({key, cert}, app);

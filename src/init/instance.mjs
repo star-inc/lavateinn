@@ -21,14 +21,14 @@ import {
 
 import {
     isCluster,
-    getMust,
+    get,
 } from "../config.mjs";
 
 // Define instance id
 export const instanceId = `${APP_NAME}#${nanoid()}`;
 
 // Define instance http url (aka. canonical url)
-export const instanceUrl = getMust("INSTANCE_URL");
+export const instanceUrl = get("INSTANCE_URL");
 
 // Define instance role (single, primary or worker)
 export const instanceRole = isCluster() ? (

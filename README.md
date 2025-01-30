@@ -117,6 +117,9 @@ You can copy it to the `.env` file to override the default configuration.
 If you want to ask users to set something not can be set in the `.env.default` file,
 please leave a `.env.sample` file and show the example of the configuration which is required to be set.
 
+There is a special character `_disabled_` for disabling the feature in the `.env` file.
+it works as same as empty value does (`_disabled_` will be converted to an empty string).
+
 If there is no `.env` file exists (such as setting configuration via system environment variables),
 you have to set `APP_CONFIGURED=1` in the environment variables to start the service. Otherwise, the service will get a fatal error and exit.
 
