@@ -3,7 +3,9 @@
 
 FROM node:20-alpine
 
-ENV RUNTIME_ENV container
+ENV TRUST_PROXY="uniquelocal"
+ENV HTTP_HOSTNAME="0.0.0.0"
+ENV RUNTIME_ENV="container"
 
 RUN addgroup \
         -g 3000 \
