@@ -4,7 +4,7 @@
 // Import modules
 import {
     get,
-    getSplited,
+    getSplitted,
 } from "./config.mjs";
 
 import process from "node:process";
@@ -196,7 +196,7 @@ async function execute() {
     await Promise.all(initPromises);
 
     // Get enabled protocols
-    const enabledProtocols = getSplited("ENABLED_PROTOCOLS");
+    const enabledProtocols = getSplitted("ENABLED_PROTOCOLS");
 
     // Define setup promises
     const setupPromises = [];

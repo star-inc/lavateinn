@@ -8,7 +8,7 @@ import express from "express";
 import {StatusCodes} from "http-status-codes";
 
 // Import config
-import {getSplited, getEnabled} from "../config.mjs";
+import {getSplitted, getEnabled} from "../config.mjs";
 
 // Import middleware
 import middlewareInstance from "../middleware/instance.mjs";
@@ -17,7 +17,7 @@ import middlewareCORS from "../middleware/cors.mjs";
 import middlewareOrigin from "../middleware/origin.mjs";
 
 // Read configuration
-const trustProxy = getSplited("TRUST_PROXY", ",");
+const trustProxy = getSplitted("TRUST_PROXY", ",");
 
 const isEnabledRedirectHttpHttps = getEnabled("ENABLED_REDIRECT_HTTP_HTTPS");
 const isEnabledCors = getEnabled("ENABLED_CORS");

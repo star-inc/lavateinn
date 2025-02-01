@@ -20,8 +20,8 @@ import {
 } from "nanoid";
 
 import {
-    isCluster,
     get,
+    isCluster,
 } from "../config.mjs";
 
 // Define instance id

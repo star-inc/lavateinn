@@ -121,7 +121,7 @@ export function getEnabled(key) {
  * @param {string} [separator] - The separator.
  * @returns {string[]} The array value.
  */
-export function getSplited(key, separator = ",") {
+export function getSplitted(key, separator = ",") {
     return get(key).
         split(separator).
         filter((i) => i).
