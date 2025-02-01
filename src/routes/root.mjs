@@ -25,16 +25,19 @@ export default () => {
             https://github.com/star-inc/lavateinn
         </a>
         `;
-        res.status(StatusCodes.IM_A_TEAPOT).send(meetMessage);
+        res.status(StatusCodes.IM_A_TEAPOT).
+            send(meetMessage);
     });
 
     // The handler of heartbeat
     app.get("/heart", (_, res) => {
-        res.type("text").send(instanceId);
+        res.type("text").
+            send(instanceId);
     });
 
     // The handler for robots.txt (deny all friendly robots)
     app.get("/robots.txt", (_, res) => {
-        res.type("txt").send("User-agent: *\nDisallow: /");
+        res.type("text").
+            send("User-agent: *\nDisallow: /");
     });
 };
