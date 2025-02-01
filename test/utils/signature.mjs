@@ -1,8 +1,11 @@
 // Lavateinn - Tiny and flexible microservice framework.
 // SPDX-License-Identifier: BSD-3-Clause (https://ncurl.xyz/s/mI23sevHR)
 
+import "../../src/init/config.mjs";
+
 import {describe, it} from "mocha";
 import {assert} from "chai";
+
 import {
     createSymmetricSignatureKey,
     createAsymmetricSignatureKeyPair,
