@@ -1,7 +1,8 @@
 // Lavateinn - Tiny and flexible microservice framework.
 // SPDX-License-Identifier: BSD-3-Clause (https://ncurl.xyz/s/mI23sevHR)
-"use strict";
 
-module.exports = {
-    require: "./test/init.mjs",
-};
+// Auto-load config
+import "../src/init/config.mjs";
+
+// Override environment variables
+process.env["NODE_ENV"] = "test";
