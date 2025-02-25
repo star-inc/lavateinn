@@ -4,7 +4,7 @@
 // queue-layer is used for delivering messages between services.
 
 // Import modules
-import {get} from "../config.mjs";
+import {get, getEnabled} from "../config.mjs";
 import amqp from "amqplib";
 
 import {
@@ -13,6 +13,7 @@ import {
 
 // Read configuration
 const amqpUrl = get("AMPQ_URL");
+const amqpDurable = getEnabled("AMPQ_DURABLE");
 
 /**
  * Lavateinn Queue.
@@ -71,7 +72,7 @@ class Queue {
      * @returns {void}
      */
     subscribe(topic, callback) {
-        this._channel.assertQueue(topic, {durable: false});
+        this._channel.assertQueue(topic, {durable: amqpDurable});
         this._channel.consume(topic, callback, {noAck: true});
     }
 
@@ -82,7 +83,7 @@ class Queue {
      * @returns {void}
      */
     receive(topic, callback) {
-        this._channel.assertQueue(topic, {durable: false});
+        this._channel.assertQueue(topic, {durable: amqpDurable});
         this._channel.consume(topic, callback, {noAck: false});
     }
 
@@ -94,7 +95,7 @@ class Queue {
      */
     deliver(topic, content) {
         const correlationId = instanceId;
-        this._channel.assertQueue(topic, {durable: false});
+        this._channel.assertQueue(topic, {durable: amqpDurable});
         this._channel.sendToQueue(topic, content, {correlationId});
     }
 
