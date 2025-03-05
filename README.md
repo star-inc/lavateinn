@@ -91,6 +91,7 @@ The primary structure of the framework is as follows:
 
 ```plaintext
 ├── app.mjs (entry point)
+├── Dockerfile (for pods deployment)
 ├── src (source code)
 │   ├── execute.mjs (application executor)
 │   ├── config.mjs (configuration reader)
