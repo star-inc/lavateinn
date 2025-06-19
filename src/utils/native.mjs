@@ -13,7 +13,7 @@ export function dateNowSecond() {
 }
 
 /**
- * Shortcut for hasOwnProperty with safe.
+ * Shortcut for hasOwnProperty with safety.
  * @module src/utils/native
  * @param {object} srcObject - The source object.
  * @param {string} propName - The property name.
