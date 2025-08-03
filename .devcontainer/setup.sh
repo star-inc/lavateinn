@@ -17,9 +17,18 @@ $SUDO apt-get update
 # Install required servers
 $SUDO apt-get install -y redis-server rabbitmq-server
 
+# Prepare prerequisite
+echo 'node ALL=(rabbitmq) NOPASSWD:ALL' | \
+    $SUDO tee /etc/sudoers.d/node-rabbitmq
+
+$SUDO mkdir -p /var/run/rabbitmq
+$SUDO chown rabbitmq:rabbitmq /var/run/rabbitmq
+
 # Start required servers
-$SUDO service redis-server start
-$SUDO service rabbitmq-server start
+$SUDO -u root \
+    service redis-server start
+$SUDO -u rabbitmq \
+    service rabbitmq-server start
 
 # Install nodejs packages
 npm install
