@@ -12,9 +12,9 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "dev": "nodemon app.mjs",
-    "start": "node app.mjs",
-    "lint": "npx lint-staged",
+    "dev": "bun --watch app.mjs",
+    "start": "bun app.mjs",
+    "lint": "bunx lint-staged",
     "lint:es": "eslint .",
     "lint:es:fix": "eslint . --fix",
     "test": "mocha test --exit --recursive --timeout 5000",

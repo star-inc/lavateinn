@@ -11,27 +11,16 @@ if [ "$EUID" != 0 ]; then
     SUDO="sudo"
 fi
 
-# Update package list
-$SUDO apt-get update
-
 # Install required servers
-$SUDO apt-get install -y redis-server rabbitmq-server
+$SUDO apk add --no-cache \
+    openrc redis rabbitmq-server
 
-# Prepare prerequisite
-echo 'node ALL=(rabbitmq) NOPASSWD:ALL' | \
-    $SUDO tee /etc/sudoers.d/node-rabbitmq
+# Install bun
+curl -fsSL https://bun.sh/install | bash
 
-$SUDO mkdir -p /var/run/rabbitmq
-$SUDO chown rabbitmq:rabbitmq /var/run/rabbitmq
-
-# Start required servers
-$SUDO -u root \
-    service redis-server start
-$SUDO -u rabbitmq \
-    service rabbitmq-server start
-
-# Install nodejs packages
-npm install
+# Install bun packages
+"$HOME/.bun/bin/bun" install
 
 # Echo success message
 echo "Setup completed successfully!"
+echo "Please close all terminal instances and reopen them for the changes to take effect."
