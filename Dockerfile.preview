@@ -1,0 +1,60 @@
+# Lavateinn - Tiny and flexible microservice framework.
+# SPDX-License-Identifier: BSD-3-Clause (https://ncurl.xyz/s/mI23sevHR)
+
+FROM node:20-alpine
+
+ENV TRUST_PROXY="uniquelocal"
+ENV HTTP_HOSTNAME="0.0.0.0"
+ENV RUNTIME_ENV="container"
+
+RUN apk add --no-cache rabbitmq-server redis bash && \
+    npm install -g pm2
+
+RUN addgroup -g 3000 scarlet && \
+    adduser -HD -u 3000 -G scarlet -h /workplace flandre && \
+    mkdir -p /.npm /workplace /var/lib/rabbitmq /var/log/rabbitmq && \
+    chown -R 3000:3000 /.npm /workplace /var/lib/rabbitmq /var/log/rabbitmq
+
+WORKDIR /workplace
+ADD . /workplace
+
+RUN tee /workplace/ecosystem.config.js > /dev/null <<'EOF'
+module.exports = {
+  apps: [
+    {
+      name: "rabbitmq",
+      script: "/usr/sbin/rabbitmq-server",
+      interpreter: "none",
+      exec_mode: "fork",
+      autorestart: true
+    },
+    {
+      name: "redis",
+      script: "/usr/bin/redis-server",
+      args: "--bind 127.0.0.1",
+      interpreter: "none",
+      exec_mode: "fork",
+      autorestart: true
+    },
+    {
+      name: "node-app",
+      script: "npm",
+      args: "start",
+      cwd: "/workplace",
+      exec_mode: "fork",
+      autorestart: true,
+      env: {
+        NODE_ENV: "production",
+        APP_CONFIGURED: "1",
+      }
+    }
+  ]
+};
+EOF
+
+USER 3000
+RUN npm install
+
+EXPOSE 3000
+
+CMD ["pm2-runtime", "start", "ecosystem.config.js"]
