@@ -215,8 +215,8 @@ async function execute() {
         );
     }
 
-    // Emit application ready event
-    process.emit("ready");
+    // Send application ready event
+    process.send("ready");
 
     // Return setup promises
     return setupPromises;
