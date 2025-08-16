@@ -43,6 +43,8 @@ module.exports = {
       cwd: "/workplace",
       exec_mode: "fork",
       autorestart: true,
+      wait_ready: true,
+      listen_timeout: 10000,
       env: {
         NODE_ENV: "production",
         APP_CONFIGURED: "1",
