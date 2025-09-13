@@ -12,6 +12,9 @@ import {
     get,
     isProduction,
 } from "../config.mjs";
+import {
+    instanceContext,
+} from "./instance.mjs";
 
 // Read configuration
 const sequelizeUrl = get("SEQUELIZE_URL");
@@ -43,5 +46,13 @@ export const initHandler = async () => {
  * @returns {Sequelize} The sequelize instance.
  */
 export function useSequelize() {
-    return new Sequelize(sequelizeUrl, sequelizeOptions);
+    // Return the existing instance if exists
+    if (instanceContext.has("Sequelize")) {
+        return instanceContext.get("Sequelize");
+    }
+
+    // Create new instance
+    const client = new Sequelize(sequelizeUrl, sequelizeOptions);
+    instanceContext.set("Sequelize", client);
+    return client;
 }

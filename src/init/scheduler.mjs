@@ -5,6 +5,9 @@
 
 // Import modules
 import schedule from "node-schedule";
+import {
+    instanceContext,
+} from "./instance.mjs";
 
 /**
  * @callback TaskCallback
@@ -62,5 +65,12 @@ export function addInitTask(time, name, options = {}) {
  * @returns {schedule} The logger.
  */
 export function useScheduler() {
+    // Return the existing instance if exists
+    if (instanceContext.has("Scheduler")) {
+        return instanceContext.get("Scheduler");
+    }
+
+    // Return the scheduler
+    instanceContext.set("Scheduler", schedule);
     return schedule;
 }

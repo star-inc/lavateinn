@@ -6,6 +6,9 @@
 // Import modules
 import winston from "winston";
 import {get, getEnabled} from "../config.mjs";
+import {
+    instanceContext,
+} from "./instance.mjs";
 
 // Read configuration
 const loggingLevel = get("LOGGING_LEVEL");
@@ -40,21 +43,30 @@ const useLoggingFile = () => loggingFilePath &&
         filename: loggingFilePath,
     });
 
-// Create logger
-const logger = winston.createLogger({
-    transports: [
-        useLoggingConsole(),
-        useLoggingHttp(),
-        useLoggingFile(),
-    ].filter((i) => i),
-    level: loggingLevel,
-});
-
 /**
  * Composable logger.
  * @module src/init/logger
  * @returns {winston.Logger} The logger.
  */
 export function useLogger() {
+    // Return the existing instance if exists
+    if (instanceContext.has("Logger")) {
+        return instanceContext.get("Logger");
+    }
+
+    // Create logger
+    const logger = winston.createLogger({
+        transports: [
+            useLoggingConsole(),
+            useLoggingHttp(),
+            useLoggingFile(),
+        ].filter((i) => i),
+        level: loggingLevel,
+    });
+
+    // Store the logger instance
+    instanceContext.set("Logger", logger);
+
+    // Return the logger
     return logger;
 }
