@@ -7,22 +7,24 @@
   "homepage": "https://github.com/star-inc/lavateinn",
   "repository": "https://github.com/star-inc/lavateinn",
   "license": "BSD-3-Clause",
-  "main": "app.mjs",
+  "main": "app.ts",
+  "type": "module",
   "engines": {
     "node": ">=20.0.0"
   },
   "scripts": {
-    "dev": "nodemon app.mjs",
-    "start": "node app.mjs",
+    "dev": "tsx watch app.ts",
+    "start": "tsx app.ts",
+    "typecheck": "tsc --noEmit",
     "lint": "npx lint-staged",
     "lint:es": "eslint .",
     "lint:es:fix": "eslint . --fix",
-    "test": "mocha test --exit --recursive --timeout 5000",
+    "test": "NODE_OPTIONS='--loader tsx' mocha test --exit --recursive --timeout 5000",
     "cover": "nyc mocha test --recursive --timeout 5000 --exit",
     "prepare": "husky install"
   },
   "lint-staged": {
-    "*.mjs": "eslint"
+    "*.ts": "eslint"
   },
   "dependencies": {
     "amqplib": "^0.10.5",
@@ -43,6 +45,16 @@
   "devDependencies": {
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",
+    "@types/amqplib": "^0.10.8",
+    "@types/chai": "^5.2.3",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.10.1",
+    "@types/node-schedule": "^2.1.8",
+    "@types/supertest": "^6.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.47.0",
+    "@typescript-eslint/parser": "^8.47.0",
     "chai": "^5.1.2",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.17.0",
@@ -54,7 +66,9 @@
     "mocha": "^11.0.1",
     "nodemon": "^3.1.10",
     "nyc": "^17.1.0",
-    "supertest": "^7.0.0"
+    "supertest": "^7.0.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
   },
   "config": {
     "commitizen": {

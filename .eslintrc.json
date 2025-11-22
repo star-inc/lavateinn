@@ -1,0 +1,69 @@
+{
+  "root": true,
+  "plugins": [
+    "jsdoc",
+    "mocha",
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jsdoc/recommended-typescript",
+    "plugin:mocha/recommended",
+    "nymph"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "sourceType": "module",
+    "ecmaVersion": 2023
+  },
+  "rules": {
+    "jsdoc/no-undefined-types": 1,
+    "jsdoc/require-hyphen-before-param-description": 1,
+    "jsdoc/require-param-type": "off",
+    "jsdoc/require-returns-type": "off",
+    "linebreak-style": 1,
+    "indent": [
+      "error",
+      4
+    ],
+    "quotes": [
+      "error",
+      "double"
+    ],
+    "@typescript-eslint/no-explicit-any": "warn"
+  },
+  "env": {
+    "es6": true,
+    "node": true,
+    "browser": false
+  },
+  "overrides": [
+    {
+      "files": [
+        "test/**/*.ts"
+      ],
+      "rules": {
+        "max-len": "off"
+      },
+      "env": {
+        "mocha": true
+      }
+    },
+    {
+      "files": [
+        "src/models/*.ts"
+      ],
+      "rules": {
+        "new-cap": "off"
+      }
+    },
+    {
+      "files": [
+        "*.ts",
+        "src/**/*.ts"
+      ]
+    }
+  ]
+}
