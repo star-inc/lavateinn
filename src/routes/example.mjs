@@ -160,7 +160,7 @@ router.get("/guess/:code",
 // Subscribe to the queue
 {
     const queue = await useQueue();
-    queue.subscribe("example", (message) => {
+    queue.subscribe("example", (message, channel) => {
         const code = message.content.toString();
         console.log(`Received: ${code}`);
     });
