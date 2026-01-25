@@ -61,31 +61,36 @@ class Queue {
     }
 
     /**
-     * @callback SubscribeCallback
+     * @callback PayloadCallback
      * @param {amqp.ConsumeMessage} message - The message.
+     * @param {amqp.Channel} channel - The channel instance.
      * @returns {void}
      */
 
     /**
      * Subscribe to a topic.
      * @param {string} topic - The topic to subscribe.
-     * @param {SubscribeCallback} callback - The callback function.
+     * @param {PayloadCallback} callback - The callback function.
      * @returns {void}
      */
     subscribe(topic, callback) {
         this._channel.assertQueue(topic, {durable: amqpDurable});
-        this._channel.consume(topic, callback, {noAck: true});
+        this._channel.consume(topic, (message) => {
+            callback(message, this._channel);
+        }, {noAck: true});
     }
 
     /**
      * Receive a message from a topic.
      * @param {string} topic - The topic to receive.
-     * @param {SubscribeCallback} callback - The callback function.
+     * @param {PayloadCallback} callback - The callback function.
      * @returns {void}
      */
     receive(topic, callback) {
         this._channel.assertQueue(topic, {durable: amqpDurable});
-        this._channel.consume(topic, callback, {noAck: false});
+        this._channel.consume(topic, (message) => {
+            callback(message, this._channel);
+        }, {noAck: false});
     }
 
     /**
