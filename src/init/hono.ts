@@ -24,7 +24,7 @@ const isEnabledCors = getEnabled("ENABLED_CORS");
 const isEnabledCorsOriginCheck = getEnabled("ENABLED_CORS_ORIGIN_CHECK");
 
 // Initialize app engine
-let app = new Hono<HonoEnv>();
+let app: Hono<HonoEnv>;
 
 /**
  * Composable application.
@@ -39,19 +39,22 @@ export function useApp(): Hono<HonoEnv> {
  * @returns The hono app.
  */
 export function resetApp(): Hono<HonoEnv> {
-    app = new Hono<HonoEnv>();
-    app.use("*", middlewareInstance);
+    const newApp = new Hono<HonoEnv>();
+    newApp.use("*", middlewareInstance);
     if (isEnabledRedirectHttpHttps) {
-        app.use("*", middlewareHttpsRedirect);
+        newApp.use("*", middlewareHttpsRedirect);
     }
     if (isEnabledCors) {
-        app.use("*", middlewareCORS);
+        newApp.use("*", middlewareCORS);
     }
     if (isEnabledCors && isEnabledCorsOriginCheck) {
-        app.use("*", middlewareOrigin);
+        newApp.use("*", middlewareOrigin);
     }
-    return app;
+    app = newApp;
+    return newApp;
 }
+
+app = resetApp();
 
 // Export hono for shortcut
 export {app as hono, StatusCodes};

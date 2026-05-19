@@ -24,19 +24,19 @@ class Queue {
     /**
      * The amqp instance.
      */
-    private _amqpClient: any;
+    private _amqpClient: amqp.ChannelModel;
 
     /**
      * The amqp channel instance.
      */
-    private _channel: any;
+    private _channel: amqp.Channel;
 
     /**
      * The Lavateinn queue instance.
      * @param client - The queue client.
      * @param channel - The queue channel.
      */
-    constructor(client: any, channel: any) {
+    constructor(client: amqp.ChannelModel, channel: amqp.Channel) {
         this._amqpClient = client;
         this._channel = channel;
     }
@@ -45,7 +45,7 @@ class Queue {
      * Get the raw amqplib client.
      * @returns The client.
      */
-    rawClient(): any {
+    rawClient(): amqp.ChannelModel {
         return this._amqpClient;
     }
 
@@ -53,7 +53,7 @@ class Queue {
      * Get the raw amqplib channel.
      * @returns The channel.
      */
-    rawChannel(): any {
+    rawChannel(): amqp.Channel {
         return this._channel;
     }
 
@@ -66,7 +66,7 @@ class Queue {
         topic: string,
         callback: (
             message: amqp.ConsumeMessage | null,
-            channel: any,
+            channel: amqp.Channel,
         ) => void,
     ): void {
         this._channel.assertQueue(topic, {durable: amqpDurable});
@@ -84,7 +84,7 @@ class Queue {
         topic: string,
         callback: (
             message: amqp.ConsumeMessage | null,
-            channel: any,
+            channel: amqp.Channel,
         ) => void,
     ): void {
         this._channel.assertQueue(topic, {durable: amqpDurable});

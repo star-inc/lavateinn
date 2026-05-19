@@ -121,11 +121,16 @@ function loadRoutes(routerNames: string[]): AppInvoker {
     );
 
     const routerMappers = routeFilenames.map((n) => import(n.toString()));
-    routerMappers.forEach((c) => c.then((f) => f.default()));
+    routerMappers.forEach((c) => {
+        routePromises.push(c.then((f) => f.default()));
+    });
 
     // Return application invoker
     return invokeApp();
 }
+
+// Define route promises
+const routePromises: Promise<void>[] = [];
 
 // Define initial promises
 const initPromises: (Promise<void> | void)[] = [];
@@ -214,8 +219,8 @@ async function execute(): Promise<ProtocolStatus[]> {
     // Use application
     const app = useApp();
 
-    // Wait for all init promises resolved
-    await Promise.all(initPromises);
+    // Wait for all route loading and init promises resolved
+    await Promise.all([...routePromises, ...initPromises]);
 
     // Get enabled protocols
     const enabledProtocols = getSplitted("ENABLED_PROTOCOLS");

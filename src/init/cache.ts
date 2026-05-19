@@ -10,6 +10,10 @@ import {
     instanceContext,
 } from "./instance.ts";
 
+interface RedisWithServerInfo extends Redis {
+    server_info?: string;
+}
+
 // Read configuration
 const redisUrl = get("REDIS_URL");
 const redisNamespace = get("REDIS_NAMESPACE");
@@ -142,7 +146,7 @@ class Cache {
      * @returns An array of cache statistics.
      */
     getStats(): string {
-        return (this._redisClient as any).server_info || "";
+        return (this._redisClient as RedisWithServerInfo).server_info || "";
     }
 
     /**
