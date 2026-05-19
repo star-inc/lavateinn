@@ -10,6 +10,7 @@ import {
 
 import {useApp, express, StatusCodes} from "../init/express.ts";
 import {useQueue} from "../init/queue.ts";
+import amqp from "amqplib";
 
 import * as utilVisitor from "../utils/visitor.ts";
 import * as utilCrypto from "../utils/crypto.ts";
@@ -160,7 +161,7 @@ router.get("/guess/:code",
 // Subscribe to the queue
 {
     const queue = await useQueue();
-    queue.subscribe("example", (message) => {
+    queue.subscribe("example", (message: amqp.ConsumeMessage | null) => {
         if (message) {
             const code = message.content.toString();
             console.log(`Received: ${code}`);
