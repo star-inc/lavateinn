@@ -11,6 +11,10 @@ node_modules
 ssl_keys
 data
 dist
+build
+
+# TypeScript
+*.tsbuildinfo
 
 # Log files
 npm-debug.log*
