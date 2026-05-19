@@ -5,7 +5,7 @@
 
 // Import modules
 import {get} from "../config.ts";
-import Redis from "ioredis";
+import {Redis} from "ioredis";
 import {
     instanceContext,
 } from "./instance.ts";
@@ -23,13 +23,13 @@ class Cache {
     /**
      * The redis instance.
      */
-    _redisClient;
+    private _redisClient: Redis;
 
     /**
      * The Lavateinn cache instance.
      * @param client - The cache client.
      */
-    constructor(client) {
+    constructor(client: Redis) {
         this._redisClient = client;
     }
 
@@ -37,7 +37,7 @@ class Cache {
      * Get the raw ioredis client.
      * @returns The client.
      */
-    rawClient() {
+    rawClient(): Redis {
         return this._redisClient;
     }
 
@@ -46,7 +46,7 @@ class Cache {
      * @param key - The cache key.
      * @returns True if the key exists, false otherwise.
      */
-    has(key) {
+    has(key: string): Promise<number> {
         return this._redisClient.exists(key);
     }
 
@@ -55,11 +55,12 @@ class Cache {
      * @param key - The cache key.
      * @returns The cached element.
      */
-    get(key) {
-        const value = this._redisClient.get(key);
-        return new Promise((resolve) => value.then(
-            (v) => resolve(JSON.parse(v)),
-        ));
+    async get<T>(key: string): Promise<T | null> {
+        const value = await this._redisClient.get(key);
+        if (value === null) {
+            return null;
+        }
+        return JSON.parse(value) as T;
     }
 
     /**
@@ -67,9 +68,9 @@ class Cache {
      * @param keys - An array of cache keys.
      * @returns An array of cached elements.
      */
-    mget(keys) {
-        const keyValueSet = this._redisClient.mget(keys);
-        return keyValueSet.map(JSON.parse);
+    async mget<T>(keys: string[]): Promise<(T | null)[]> {
+        const values = await this._redisClient.mget(keys);
+        return values.map((v) => (v === null ? null : (JSON.parse(v) as T)));
     }
 
     /**
@@ -79,19 +80,22 @@ class Cache {
      * @param ttl - The time to live for the cache.
      * @returns True if the key is set, false otherwise.
      */
-    set(key, value, ttl) {
-        value = JSON.stringify(value);
-        return this._redisClient.setex(key, ttl, value);
+    set(key: string, value: any, ttl: number): Promise<"OK"> {
+        const valueStr = JSON.stringify(value);
+        return this._redisClient.setex(key, ttl, valueStr);
     }
 
     /**
      * Set multiple cached keys with the given values.
-     * @param keyValueSet - An array of object.
+     * @param keyValueSet - An object representing keys and values.
      * @returns True if all keys are set, false otherwise.
      */
-    mset(keyValueSet) {
-        keyValueSet = keyValueSet.map(JSON.stringify);
-        return this._redisClient.mset(keyValueSet);
+    mset(keyValueSet: Record<string, any>): Promise<"OK"> {
+        const stringifiedMap: Record<string, string> = {};
+        for (const [key, value] of Object.entries(keyValueSet)) {
+            stringifiedMap[key] = JSON.stringify(value);
+        }
+        return this._redisClient.mset(stringifiedMap);
     }
 
     /**
@@ -99,7 +103,10 @@ class Cache {
      * @param keys - The cache key.
      * @returns True if the key is deleted, false otherwise.
      */
-    del(keys) {
+    del(keys: string | string[]): Promise<number> {
+        if (Array.isArray(keys)) {
+            return this._redisClient.del(...keys);
+        }
         return this._redisClient.del(keys);
     }
 
@@ -109,7 +116,7 @@ class Cache {
      * @param ttl - The time to live for the cache.
      * @returns True if the key is set, false otherwise.
      */
-    ttl(key, ttl) {
+    ttl(key: string, ttl: number): Promise<number> {
         return this._redisClient.expire(key, ttl);
     }
 
@@ -118,7 +125,7 @@ class Cache {
      * @param key - The cache key.
      * @returns The TTL in seconds.
      */
-    getTTL(key) {
+    getTTL(key: string): Promise<number> {
         return this._redisClient.ttl(key);
     }
 
@@ -126,7 +133,7 @@ class Cache {
      * List all keys within this cache
      * @returns An array of all keys.
      */
-    keys() {
+    keys(): Promise<string[]> {
         return this._redisClient.keys("*");
     }
 
@@ -134,15 +141,15 @@ class Cache {
      * Get cache statistics.
      * @returns An array of cache statistics.
      */
-    getStats() {
-        return this._redisClient.server_info;
+    getStats(): string {
+        return (this._redisClient as any).server_info || "";
     }
 
     /**
      * Flush the whole data and reset the cache.
      * @returns true if the cache is flushed.
      */
-    flushAll() {
+    flushAll(): Promise<"OK"> {
         return this._redisClient.flushall();
     }
 
@@ -150,7 +157,7 @@ class Cache {
      * This will clear the interval timeout which is set on checkperiod option.
      * @returns true if the cache is cleared and closed.
      */
-    close() {
+    close(): Promise<"OK" | undefined> {
         return this._redisClient.quit();
     }
 }
@@ -159,7 +166,7 @@ class Cache {
  * Composable cache.
  * @returns The cache-layer
  */
-export function useCache() {
+export function useCache(): Cache {
     // Return the existing instance if exists
     if (instanceContext.has("Cache")) {
         return instanceContext.get("Cache");

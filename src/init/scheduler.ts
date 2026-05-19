@@ -5,9 +5,7 @@
 
 // Import modules
 import schedule from "node-schedule";
-import {
-    instanceContext,
-} from "./instance.ts";
+import {instanceContext} from "./instance.ts";
 
 type TaskModule = {
     default: (date: Date, options: Record<string, unknown>) => void;
@@ -67,10 +65,10 @@ export function addInitTask(
  * Composable scheduler.
  * @returns The logger.
  */
-export function useScheduler() {
+export function useScheduler(): typeof schedule {
     // Return the existing instance if exists
     if (instanceContext.has("Scheduler")) {
-        return instanceContext.get("Scheduler");
+        return instanceContext.get("Scheduler") as typeof schedule;
     }
 
     // Return the scheduler

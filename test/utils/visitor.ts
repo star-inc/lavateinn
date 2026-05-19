@@ -2,33 +2,40 @@
 // SPDX-License-Identifier: BSD-3-Clause (https://ncurl.xyz/s/mI23sevHR)
 
 import {describe, it} from "mocha";
-import {assert} from "chai";
+import {expect} from "chai";
+import {getIPAddress, getUserAgent} from "../../src/utils/visitor.ts";
 
-import {
-    getIPAddress,
-    getUserAgent,
-} from "../../src/utils/visitor.ts";
-
-describe("Visitor", function() {
-    describe("#getIPAddress()", function() {
-        it("should return 127.0.0.1 in non-production", function() {
-            const req = {ip: "192.168.1.1"};
-            const ipAddress = getIPAddress(req);
-            assert.equal(ipAddress, "127.0.0.1");
+describe("Visitor", () => {
+    describe("#getIPAddress()", () => {
+        it("should return 127.0.0.1 in non-production", () => {
+            const mockContext = {} as unknown as Parameters<
+                typeof getIPAddress
+            >[0];
+            expect(getIPAddress(mockContext)).to.equal("127.0.0.1");
         });
     });
 
-    describe("#getUserAgent()", function() {
-        it("should return the User-Agent", function() {
-            const req = {header: () => "Mozilla/5.0"};
-            const userAgent = getUserAgent(req);
-            assert.equal(userAgent, "Mozilla/5.0");
+    describe("#getUserAgent()", () => {
+        it("should return the User-Agent", () => {
+            const mockContext = {
+                req: {
+                    header: (name: string): string | undefined => {
+                        return name === "user-agent" ? "Test-Agent" : undefined;
+                    },
+                },
+            } as unknown as Parameters<typeof getUserAgent>[0];
+            expect(getUserAgent(mockContext)).to.equal("Test-Agent");
         });
 
-        it("should return 'Unknown' if User-Agent is not present", function() {
-            const req = {header: () => null};
-            const userAgent = getUserAgent(req);
-            assert.equal(userAgent, "Unknown");
+        it("should return 'Unknown' if User-Agent is not present", () => {
+            const mockContext = {
+                req: {
+                    header: (): string | undefined => {
+                        return undefined;
+                    },
+                },
+            } as unknown as Parameters<typeof getUserAgent>[0];
+            expect(getUserAgent(mockContext)).to.equal("Unknown");
         });
     });
 });

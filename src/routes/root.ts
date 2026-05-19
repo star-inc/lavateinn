@@ -1,6 +1,10 @@
 // Lavateinn - Tiny and flexible microservice framework.
 // SPDX-License-Identifier: BSD-3-Clause (https://ncurl.xyz/s/mI23sevHR)
 
+import type {Context} from "hono";
+import type {StatusCode} from "hono/utils/http-status";
+import type {HonoEnv} from "../types/hono.ts";
+
 // Import instance variables
 import {
     instanceId,
@@ -8,36 +12,34 @@ import {
 
 // Import modules
 import {
-    useApp,
     StatusCodes,
-} from "../init/express.ts";
+    useApp,
+} from "../init/hono.ts";
 
 // Export routes mapper (function)
-export default () => {
+export default (): void => {
     // Use application
     const app = useApp();
 
     // API Index Message
-    app.get("/", (_, res) => {
+    app.get("/", (c: Context<HonoEnv>) => {
         const meetMessage = `
         Star Inc. Lavateinn Framework <br />
         <a href="https://github.com/star-inc/lavateinn" target="_blank">
             https://github.com/star-inc/lavateinn
         </a>
         `;
-        res.status(StatusCodes.IM_A_TEAPOT).
-            send(meetMessage);
+        c.status(StatusCodes.IM_A_TEAPOT as StatusCode);
+        return c.html(meetMessage);
     });
 
     // The handler of heartbeat
-    app.get("/heart", (_, res) => {
-        res.type("text").
-            send(instanceId);
+    app.get("/heart", (c: Context<HonoEnv>) => {
+        return c.text(instanceId);
     });
 
     // The handler for robots.txt (deny all friendly robots)
-    app.get("/robots.txt", (_, res) => {
-        res.type("text").
-            send("User-agent: *\nDisallow: /");
+    app.get("/robots.txt", (c: Context<HonoEnv>) => {
+        return c.text("User-agent: *\nDisallow: /");
     });
 };

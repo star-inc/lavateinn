@@ -8,8 +8,8 @@ import {get, getEnabled} from "../config.ts";
 import amqp from "amqplib";
 
 import {
-    instanceId,
     instanceContext,
+    instanceId,
 } from "./instance.ts";
 
 // Read configuration
@@ -24,19 +24,19 @@ class Queue {
     /**
      * The amqp instance.
      */
-    _amqpClient: amqp.Connection;
+    private _amqpClient: any;
 
     /**
      * The amqp channel instance.
      */
-    _channel: amqp.Channel;
+    private _channel: any;
 
     /**
      * The Lavateinn queue instance.
      * @param client - The queue client.
      * @param channel - The queue channel.
      */
-    constructor(client: amqp.Connection, channel: amqp.Channel) {
+    constructor(client: any, channel: any) {
         this._amqpClient = client;
         this._channel = channel;
     }
@@ -45,7 +45,7 @@ class Queue {
      * Get the raw amqplib client.
      * @returns The client.
      */
-    rawClient() {
+    rawClient(): any {
         return this._amqpClient;
     }
 
@@ -53,7 +53,7 @@ class Queue {
      * Get the raw amqplib channel.
      * @returns The channel.
      */
-    rawChannel() {
+    rawChannel(): any {
         return this._channel;
     }
 
@@ -66,11 +66,11 @@ class Queue {
         topic: string,
         callback: (
             message: amqp.ConsumeMessage | null,
-            channel: amqp.Channel,
+            channel: any,
         ) => void,
     ): void {
         this._channel.assertQueue(topic, {durable: amqpDurable});
-        this._channel.consume(topic, (message) => {
+        this._channel.consume(topic, (message: amqp.ConsumeMessage | null) => {
             callback(message, this._channel);
         }, {noAck: true});
     }
@@ -84,11 +84,11 @@ class Queue {
         topic: string,
         callback: (
             message: amqp.ConsumeMessage | null,
-            channel: amqp.Channel,
+            channel: any,
         ) => void,
     ): void {
         this._channel.assertQueue(topic, {durable: amqpDurable});
-        this._channel.consume(topic, (message) => {
+        this._channel.consume(topic, (message: amqp.ConsumeMessage | null) => {
             callback(message, this._channel);
         }, {noAck: false});
     }
@@ -108,7 +108,7 @@ class Queue {
      * Close the queue-layer.
      * @returns Promise that resolves when closed.
      */
-    close() {
+    close(): Promise<void> {
         return this._amqpClient.close();
     }
 }
@@ -117,7 +117,7 @@ class Queue {
  * Composable Queue.
  * @returns The queue-layer
  */
-export async function useQueue() {
+export async function useQueue(): Promise<Queue> {
     // Return the existing instance if exists
     if (instanceContext.has("Queue")) {
         return instanceContext.get("Queue");

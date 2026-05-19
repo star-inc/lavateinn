@@ -9,7 +9,7 @@ import dotenv from "dotenv";
 /**
  * Load configs from system environment variables.
  */
-export function runLoader() {
+export function runLoader(): void {
     const dotenvPathDefault = new URL("../.env.default", import.meta.url);
     const dotenvPathInstance = new URL("../.env", import.meta.url);
 
@@ -34,7 +34,7 @@ export function runLoader() {
     const dotenvPaths = [
         dotenvPathInstance,
         dotenvPathDefault,
-    ].map(fileURLToPath);
+    ].map((path) => fileURLToPath(path));
 
     dotenv.config({
         path: dotenvPaths,
@@ -45,7 +45,7 @@ export function runLoader() {
  * Get the current NODE_ENV value.
  * @returns The NODE_ENV value.
  */
-export function getNodeEnv() {
+export function getNodeEnv(): string {
     return get("NODE_ENV");
 }
 
@@ -53,7 +53,7 @@ export function getNodeEnv() {
  * Get the current RUNTIME_ENV value.
  * @returns The RUNTIME_ENV value.
  */
-export function getRuntimeEnv() {
+export function getRuntimeEnv(): string {
     return get("RUNTIME_ENV");
 }
 
@@ -61,7 +61,7 @@ export function getRuntimeEnv() {
  * Get the current INSTANCE_MODE value.
  * @returns The INSTANCE_MODE value.
  */
-export function getInstanceMode() {
+export function getInstanceMode(): string {
     return get("INSTANCE_MODE");
 }
 
@@ -69,7 +69,7 @@ export function getInstanceMode() {
  * Check is production mode.
  * @returns True if it's production.
  */
-export function isProduction() {
+export function isProduction(): boolean {
     return getNodeEnv() === "production";
 }
 
@@ -77,7 +77,7 @@ export function isProduction() {
  * Check is cluster mode.
  * @returns True if it's cluster mode.
  */
-export function isCluster() {
+export function isCluster(): boolean {
     return getInstanceMode() === "cluster";
 }
 
@@ -87,7 +87,7 @@ export function isCluster() {
  * @returns The config value.
  * @throws {Error} If value is undefined, throw an error.
  */
-export function get(key) {
+export function get(key: string): string {
     const value = process.env[key];
     if (value === undefined) {
         throw new Error(`config key ${key} is undefined`);
@@ -103,7 +103,7 @@ export function get(key) {
  * @param key - The config key.
  * @returns The boolean value.
  */
-export function getEnabled(key) {
+export function getEnabled(key: string): boolean {
     return get(key) === "yes";
 }
 
@@ -113,7 +113,7 @@ export function getEnabled(key) {
  * @param [separator] - The separator.
  * @returns The array value.
  */
-export function getSplitted(key, separator = ",") {
+export function getSplitted(key: string, separator = ","): string[] {
     return get(key).
         split(separator).
         filter((i) => i).

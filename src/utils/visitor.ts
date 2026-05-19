@@ -3,26 +3,28 @@
 
 // The simple toolbox for fetching visitor information from HTTP request.
 
+import type {Context} from "hono";
 import {isProduction} from "../config.ts";
-import type {Request} from "express";
+import {getConnInfo} from "@hono/node-server/conninfo";
 
 /**
  * Get IP Address.
- * @param req - The request.
+ * @param c - The hono context.
  * @returns The IP Address.
  */
-export function getIPAddress(req: Request): string {
+export function getIPAddress(c: Context): string {
     if (!isProduction()) {
         return "127.0.0.1";
     }
-    return req.ip || "127.0.0.1";
+    const info = getConnInfo(c);
+    return info.remote.address || "127.0.0.1";
 }
 
 /**
  * Get User-Agent.
- * @param req - The request.
+ * @param c - The hono context.
  * @returns The User-Agent.
  */
-export function getUserAgent(req: Request): string {
-    return req.header("user-agent") || "Unknown";
+export function getUserAgent(c: Context): string {
+    return c.req.header("user-agent") || "Unknown";
 }

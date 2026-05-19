@@ -51,7 +51,10 @@ const messageBox = new events.EventEmitter();
  * @param type - The message type.
  * @param listener - The message listener.
  */
-export function onMessage(type, listener) {
+export function onMessage(
+    type: string,
+    listener: (...args: unknown[]) => void,
+): void {
     messageBox.on(type, listener);
 }
 
@@ -61,7 +64,10 @@ export function onMessage(type, listener) {
  * @param payload - The message payload.
  * @returns The message.
  */
-export function toMessage(type, payload) {
+export function toMessage(
+    type: string,
+    payload: Record<string, unknown>,
+): {type: string, [key: string]: unknown} {
     return {type, ...payload};
 }
 
@@ -104,25 +110,32 @@ export function setupClusterPrimary() {
  * Setup cluster mode for worker instance.
  * @returns A promise that resolves when setup completed.
  */
-export function setupClusterWorker() {
+export function setupClusterWorker(): Promise<void> {
     // Listen messages from primary
-    process.on("message", (message) => {
-        messageBox.emit(message.type, message);
+    process.on("message", (message: unknown) => {
+        const msg = message as {type: string, [key: string]: unknown};
+        messageBox.emit(msg.type, msg);
     });
 
     // Emit startup signal
-    process.send(toMessage(
-        "startup", {instanceId},
-    ));
+    if (process.send) {
+        process.send(toMessage(
+            "startup", {instanceId},
+        ));
+    }
 
     // Wait for startup signal
-    return new Promise((resolve) => {
-        messageBox.on("startup", (message) => {
+    return new Promise<void>((resolve) => {
+        messageBox.on("startup", (message: unknown) => {
+            const msg = message as {
+                primaryId: string;
+                workerId: number;
+            };
             instanceContext.set(
-                "primaryId", message.primaryId,
+                "primaryId", msg.primaryId,
             );
             instanceContext.set(
-                "workerId", message.workerId,
+                "workerId", msg.workerId,
             );
             resolve();
         });

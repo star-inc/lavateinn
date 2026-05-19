@@ -4,17 +4,13 @@
 // sequelize is an easy-to-use and promise-based database orm tool.
 
 // Import modules
-import {
-    Sequelize,
-} from "sequelize";
+import {Sequelize} from "sequelize";
 
 import {
     get,
     isProduction,
 } from "../config.ts";
-import {
-    instanceContext,
-} from "./instance.ts";
+import {instanceContext} from "./instance.ts";
 
 // Read configuration
 const sequelizeUrl = get("SEQUELIZE_URL");
@@ -26,7 +22,7 @@ const sequelizeOptions = {
 /**
  * Initialize the sequelize.
  */
-export const initHandler = async () => {
+export const initHandler = async (): Promise<void> => {
     // Import models
     await import("../models/index.ts");
 
@@ -42,10 +38,10 @@ export const initHandler = async () => {
  * Composable Sequelize.
  * @returns The sequelize instance.
  */
-export function useSequelize() {
+export function useSequelize(): Sequelize {
     // Return the existing instance if exists
     if (instanceContext.has("Sequelize")) {
-        return instanceContext.get("Sequelize");
+        return instanceContext.get("Sequelize") as Sequelize;
     }
 
     // Create new instance

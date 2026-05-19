@@ -3,29 +3,28 @@
 
 // Import modules
 import {
+    getInstanceMode,
     getNodeEnv,
     getRuntimeEnv,
-    getInstanceMode,
 } from "../config.ts";
 
-import {useApp, express, StatusCodes} from "../init/express.ts";
+import {Hono} from "hono";
+import {validator} from "hono/validator";
+import type {StatusCode} from "hono/utils/http-status";
+import type {HonoEnv} from "../types/hono.ts";
+
+import {StatusCodes, useApp} from "../init/hono.ts";
 import {useQueue} from "../init/queue.ts";
 import amqp from "amqplib";
 
 import * as utilVisitor from "../utils/visitor.ts";
-import * as utilCrypto from "../utils/crypto.ts";
-import * as utilNative from "../utils/native.ts";
+import {timingSafeEqualString} from "../utils/crypto.ts";
+import {dateNowSecond} from "../utils/native.ts";
 
-import middlewareValidator from "express-validator";
-import middlewareInspector from "../middleware/inspector.ts";
-import middlewareRestrictor from "../middleware/restrictor.ts";
+import useMiddlewareRestrictor from "../middleware/restrictor.ts";
 
 // Create router
-const {Router: newRouter} = express;
-const router = newRouter();
-
-// Request body parser middleware
-router.use(express.json());
+const router = new Hono<HonoEnv>();
 
 /**
  * >openapi
@@ -39,8 +38,8 @@ router.use(express.json());
  *       200:
  *         description: Returns current POSIX timestamp.
  */
-router.get("/now", (_, res) => {
-    res.send({timestamp: utilNative.dateNowSecond()});
+router.get("/now", (c) => {
+    return c.json({timestamp: dateNowSecond()});
 });
 
 /**
@@ -56,10 +55,10 @@ router.get("/now", (_, res) => {
  *       200:
  *         description: Returns current visitor information.
  */
-router.get("/visitor", (req, res) => {
-    res.send({
-        ip_address: utilVisitor.getIPAddress(req),
-        user_agent: utilVisitor.getUserAgent(req),
+router.get("/visitor", (c) => {
+    return c.json({
+        ip_address: utilVisitor.getIPAddress(c),
+        user_agent: utilVisitor.getUserAgent(c),
     });
 });
 
@@ -75,14 +74,14 @@ router.get("/visitor", (req, res) => {
  *       200:
  *         description: Returns the application environment.
  */
-router.get("/env", (_, res) => {
+router.get("/env", (c) => {
     // Get environment variables
     const nodeEnv = getNodeEnv();
     const runtimeEnv = getRuntimeEnv();
     const instanceMode = getInstanceMode();
 
     // Send response
-    res.send({
+    return c.json({
         node_env: nodeEnv,
         runtime_env: runtimeEnv,
         instance_mode: instanceMode,
@@ -96,7 +95,7 @@ router.get("/env", (_, res) => {
  *     tags:
  *       - example
  *     summary: Empty field checks
- *     description: Example to check fields with middlewareValidator.
+ *     description: Example to check fields with validator.
  *     parameters:
  *       - in: query
  *         name: empty
@@ -111,10 +110,18 @@ router.get("/env", (_, res) => {
  *         description: Returns "Bad Request" if the "empty" field of
  *                      query is not real empty (not unset).
  */
-router.get("/empty",
-    middlewareValidator.query("empty").isEmpty(),
-    middlewareInspector, (_, res) => {
-        res.send(
+router.get(
+    "/empty",
+    validator("query", (value, c) => {
+        const empty = value["empty"];
+        if (empty !== undefined && empty !== "") {
+            c.status(StatusCodes.BAD_REQUEST as StatusCode);
+            return c.json({error: "empty field must be empty"});
+        }
+        return {empty};
+    }),
+    (c) => {
+        return c.html(
             "200 Success<br />" +
             "(Field \"empty\" in query should be empty, " +
             "or it will send error \"400 Bad Request\".)",
@@ -146,28 +153,27 @@ const trustedCode = "qwertyuiop";
  *       403:
  *         description: Returns "Forbidden" if the answer is wrong.
  */
-router.get("/guess/:code",
-    middlewareRestrictor(5, 30, true),
-    (req, res) => {
-        const untrustedCode = req.params.code;
-        if (!utilCrypto.timingSafeEqualString(untrustedCode, trustedCode)) {
-            res.sendStatus(StatusCodes.FORBIDDEN);
-            return;
+router.get(
+    "/guess/:code",
+    useMiddlewareRestrictor(5, 30, true),
+    (c) => {
+        const untrustedCode = c.req.param("code");
+        if (!timingSafeEqualString(untrustedCode, trustedCode)) {
+            c.status(StatusCodes.FORBIDDEN as StatusCode);
+            return c.body(null);
         }
-        res.send(`Hello! ${trustedCode}`);
+        return c.text(`Hello! ${trustedCode}`);
     },
 );
 
 // Subscribe to the queue
-{
-    const queue = await useQueue();
-    queue.subscribe("example", (message: amqp.ConsumeMessage | null) => {
-        if (message) {
-            const code = message.content.toString();
-            console.log(`Received: ${code}`);
-        }
-    });
-}
+const queue = await useQueue();
+queue.subscribe("example", (message: amqp.ConsumeMessage | null) => {
+    if (message) {
+        const code = message.content.toString();
+        console.log(`Received: ${code}`);
+    }
+});
 
 /**
  * >openapi
@@ -188,20 +194,22 @@ router.get("/guess/:code",
  *       201:
  *         description: Returns "Accepted" if the content is queued.
  */
-router.get("/queue/:content",
-    async (req, res) => {
-        const queue = await useQueue();
-        const queueContent = Buffer.from(req.params.content);
-        queue.deliver("example", queueContent);
-        res.sendStatus(StatusCodes.ACCEPTED);
+router.get(
+    "/queue/:content",
+    async (c) => {
+        const q = await useQueue();
+        const queueContent = Buffer.from(c.req.param("content"));
+        q.deliver("example", queueContent);
+        c.status(StatusCodes.ACCEPTED as StatusCode);
+        return c.body(null);
     },
 );
 
 // Export routes mapper (function)
-export default () => {
+export default (): void => {
     // Use application
     const app = useApp();
 
     // Mount the router
-    app.use("/example", router);
+    app.route("/example", router);
 };

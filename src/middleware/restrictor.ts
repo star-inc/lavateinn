@@ -4,23 +4,24 @@
 // The solution to defense from brute-force attacks,
 
 // Import modules
-import {StatusCodes} from "../init/express.ts";
+import type {Context, MiddlewareHandler, Next} from "hono";
+import type {StatusCode} from "hono/utils/http-status";
+import {StatusCodes} from "../init/hono.ts";
 import {useCache} from "../init/cache.ts";
 import {useLogger} from "../init/logger.ts";
 import {getIPAddress} from "../utils/visitor.ts";
-import type {Request, Response, NextFunction} from "express";
 
 // Use composable functions
 const logger = useLogger();
 
 /**
  * Get path key from request.
- * @param req - The request.
+ * @param c - The hono context.
  * @param isParam - To detect param mode or not.
  * @returns The path key.
  */
-function getPathKey(req: Request, isParam: boolean): string {
-    const pathArray = req.originalUrl.split("/").filter((i) => !!i);
+function getPathKey(c: Context, isParam: boolean): string {
+    const pathArray = c.req.path.split("/").filter((i) => !!i);
     if (isParam) {
         pathArray.pop();
     }
@@ -39,9 +40,9 @@ type ForbiddenCallback = (actual: number, expect: number) => void;
  * if no request comes. If set to 0, it will be blocked forever
  * until the software is restarted.
  * @param isParam - The flag to remove the last path from the key.
- * @param customForbiddenStatus - The custom status code for
+ * @param [customForbiddenStatus] - The custom status code for
  * forbidden requests, optional.
- * @param customForbiddenCallback - The custom callback
+ * @param [customForbiddenCallback] - The custom callback
  * for forbidden requests, optional.
  * @returns The middleware handler.
  */
@@ -51,33 +52,32 @@ export default function useMiddlewareRestrictor(
     isParam: boolean,
     customForbiddenStatus: number | null = null,
     customForbiddenCallback: ForbiddenCallback | null = null,
-) {
+): MiddlewareHandler {
     /**
      * Middleware for restricting the request.
-     * @param req - The request.
-     * @param res - The response.
-     * @param next - The next handler.
+     * @param c - The hono context.
+     * @param next - The hono next handler.
+     * @returns The Hono response or void.
      */
-    function middlewareRestrictor(
-        req: Request,
-        res: Response,
-        next: NextFunction,
-    ): void {
+    return async function middlewareRestrictor(
+        c: Context,
+        next: Next,
+    ): Promise<Response | void> {
         // Define the query key
-        const pathKey = getPathKey(req, isParam);
-        const ipAddress = getIPAddress(req);
+        const pathKey = getPathKey(c, isParam);
+        const ipAddress = getIPAddress(c);
         const queryKey = ["restrictor", pathKey, ipAddress].join(":");
 
         // Get the cache instance
         const cache = useCache();
 
         // Get the key value
-        const keyValue = cache.get(queryKey);
+        const keyValue = (await cache.get<number>(queryKey)) || 0;
 
         // Define the increase value function
-        const increaseValue = () => {
+        const increaseValue = async () => {
             const offset = keyValue ? keyValue + 1 : 1;
-            cache.set(queryKey, offset, ttl);
+            await cache.set(queryKey, offset, ttl);
         };
 
         if (keyValue > max) {
@@ -89,43 +89,40 @@ export default function useMiddlewareRestrictor(
             );
 
             // Send the response
-            res.sendStatus(StatusCodes.TOO_MANY_REQUESTS);
+            c.status(StatusCodes.TOO_MANY_REQUESTS as StatusCode);
+            const res = c.body(null);
 
             // Call the custom callback
             customForbiddenCallback?.(keyValue, max);
 
             // Increase the value
-            increaseValue();
+            await increaseValue();
 
             // Return
+            return res;
+        }
+
+        // Call next middleware
+        await next();
+
+        // Define the forbidden status code
+        const forbiddenStatus = (
+            customForbiddenStatus ?? StatusCodes.FORBIDDEN
+        );
+
+        // Check if the response status code is not forbidden
+        if (c.res.status !== forbiddenStatus) {
             return;
         }
 
-        res.on("finish", () => {
-            // Define the forbidden status code
-            const forbiddenStatus = (
-                customForbiddenStatus ?? StatusCodes.FORBIDDEN
-            );
+        // Log the warning
+        logger.warn(
+            "An forbidden request detected:",
+            forbiddenStatus,
+            queryKey,
+        );
 
-            // Check if the response status code is not forbidden
-            if (res.statusCode !== forbiddenStatus) {
-                return;
-            }
-
-            // Log the warning
-            logger.warn(
-                "An forbidden request detected:",
-                forbiddenStatus,
-                queryKey,
-            );
-
-            // Increase the value
-            increaseValue();
-        });
-
-        // Call next middleware
-        next();
-    }
-
-    return middlewareRestrictor;
+        // Increase the value
+        await increaseValue();
+    };
 }

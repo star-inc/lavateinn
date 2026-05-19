@@ -3,7 +3,5 @@
 "use strict";
 
 module.exports = {
-    require: "tsx/cjs",
     spec: ["test/**/*.ts"],
-    loader: "tsx",
 };
