@@ -4,43 +4,38 @@
 // Instance middleware
 // Inject instance variables to the application.
 
-// Import modules
-import type {Request, Response, NextFunction} from "express";
+import type {Context, Next} from "hono";
+import type {HonoEnv} from "../types/hono.ts";
 
+// Import modules
 import {
-    instanceId,
-    instanceUrl,
-    instanceRole,
     instanceContext,
+    instanceId,
+    instanceRole,
+    instanceUrl,
 } from "../init/instance.ts";
 
 /**
  * Middleware to inject instance variables.
- * @param req - The express request.
- * @param res - The express response.
- * @param next - The express next function.
+ * @param c - The hono context.
+ * @param next - The hono next function.
+ * @returns Promise that resolves when finished.
  */
-export default function middlewareInstance(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-): void {
-    // Inject instance variables to request
-    Object.defineProperty(req, "instance", {
-        value: {
-            id: instanceId,
-            url: instanceUrl,
-            role: instanceRole,
-            context: instanceContext,
-        },
-        writable: false,
-        enumerable: true,
-        configurable: false,
+export default async function middlewareInstance(
+    c: Context<HonoEnv>,
+    next: Next,
+): Promise<void> {
+    // Inject instance variables to context
+    c.set("instance", {
+        id: instanceId,
+        url: instanceUrl,
+        role: instanceRole,
+        context: instanceContext,
     });
 
     // Inject instance variables to response
-    res.setHeader("X-Lavateinn-Instance-Id", instanceId);
+    c.header("X-Lavateinn-Instance-Id", instanceId);
 
     // Call next function
-    next();
+    await next();
 }

@@ -5,9 +5,9 @@ import {describe, it} from "mocha";
 import {assert} from "chai";
 
 import {
+    camelToSnakeCase,
     dateNowSecond,
     hasProp,
-    camelToSnakeCase,
     snakeToCamelCase,
 } from "../../src/utils/native.ts";
 

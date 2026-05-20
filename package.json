@@ -10,16 +10,16 @@
   "main": "app.ts",
   "type": "module",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=24.0.0"
   },
   "scripts": {
-    "dev": "tsx watch app.ts",
-    "start": "tsx app.ts",
-    "typecheck": "tsc --noEmit",
+    "dev": "node --watch app.ts",
+    "start": "node app.ts",
     "lint": "npx lint-staged",
+    "lint:ts": "tsc --noEmit",
     "lint:es": "eslint .",
     "lint:es:fix": "eslint . --fix",
-    "test": "NODE_OPTIONS='--loader tsx' mocha test --exit --recursive --timeout 5000",
+    "test": "mocha test --exit --recursive --timeout 5000",
     "cover": "nyc mocha test --recursive --timeout 5000 --exit",
     "prepare": "husky install"
   },
@@ -27,12 +27,11 @@
     "*.ts": "eslint"
   },
   "dependencies": {
+    "@hono/node-server": "^1.13.0",
     "amqplib": "^0.10.5",
-    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "express": "^5.0.1",
-    "express-validator": "^7.2.1",
     "got": "^14.4.4",
+    "hono": "^4.6.0",
     "http-status-codes": "^2.2.0",
     "ioredis": "^5.4.1",
     "nanoid": "^5.0.8",
@@ -45,21 +44,17 @@
   "devDependencies": {
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",
+    "@eslint/js": "^9.39.4",
     "@types/amqplib": "^0.10.8",
     "@types/chai": "^5.2.3",
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.5",
     "@types/mocha": "^10.0.10",
     "@types/node": "^24.10.1",
     "@types/node-schedule": "^2.1.8",
     "@types/supertest": "^6.0.3",
-    "@typescript-eslint/eslint-plugin": "^8.47.0",
-    "@typescript-eslint/parser": "^8.47.0",
     "chai": "^5.1.2",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.17.0",
-    "eslint-config-nymph": "^0.15.0",
-    "eslint-plugin-jsdoc": "^48.2.3",
+    "eslint": "^9.39.4",
+    "eslint-plugin-jsdoc": "^62.9.0",
     "eslint-plugin-mocha": "^10.5.0",
     "husky": "^8.0.3",
     "lint-staged": "^16.1.2",
@@ -67,8 +62,8 @@
     "nodemon": "^3.1.10",
     "nyc": "^17.1.0",
     "supertest": "^7.0.0",
-    "tsx": "^4.20.6",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.3"
   },
   "config": {
     "commitizen": {

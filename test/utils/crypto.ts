@@ -5,11 +5,11 @@ import {describe, it} from "mocha";
 import {assert} from "chai";
 
 import {
-    timingSafeEqualString,
-    randomCode,
-    randomString,
     hash2hex,
     hmac2hex,
+    randomCode,
+    randomString,
+    timingSafeEqualString,
 } from "../../src/utils/crypto.ts";
 
 describe("Crypto", function() {

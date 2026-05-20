@@ -38,7 +38,7 @@ export async function createAsymmetricSignatureKeyPair():
 Promise<webcrypto.CryptoKeyPair> {
     return subtle.generateKey({
         name: "ed25519",
-    }, true, ["sign", "verify"]);
+    }, true, ["sign", "verify"]) as unknown as Promise<webcrypto.CryptoKeyPair>;
 }
 
 /**

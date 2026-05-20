@@ -1,7 +1,7 @@
 # Lavateinn - Tiny and flexible microservice framework.
 # SPDX-License-Identifier: BSD-3-Clause (https://ncurl.xyz/s/mI23sevHR)
 
-FROM node:20-alpine
+FROM node:24-alpine
 
 ENV TRUST_PROXY="uniquelocal"
 ENV HTTP_HOSTNAME="0.0.0.0"

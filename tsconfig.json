@@ -1,57 +1,34 @@
 {
   "compilerOptions": {
-    /* Language and Environment */
-    "target": "ES2023",
+    "target": "es2024",
     "module": "NodeNext",
+    "lib": ["es2024", "dom"],
     "moduleResolution": "NodeNext",
-    "lib": ["ES2023"],
-    
-    /* Type Checking */
-    "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictBindCallApply": true,
-    "strictPropertyInitialization": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true,
-    "allowUnusedLabels": false,
-    "allowUnreachableCode": false,
-    
-    /* Modules */
-    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
-    "verbatimModuleSyntax": true,
-    
-    /* Emit */
-    "noEmit": true,
-    "erasableSyntaxOnly": true,
-    
-    /* Interop Constraints */
+    "allowJs": true,
+    "strict": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    
-    /* Skip Checking */
     "skipLibCheck": true,
-    
-    /* Other */
-    "types": ["node", "mocha"]
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "types": [
+      "node",
+      "mocha"
+    ]
   },
   "include": [
+    "app.ts",
     "src/**/*.ts",
-    "test/**/*.ts",
-    "app.ts"
+    "test/**/*.ts"
   ],
   "exclude": [
     "node_modules",
     "dist",
+    "coverage",
     "build"
   ]
 }

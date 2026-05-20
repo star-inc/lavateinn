@@ -8,16 +8,17 @@ import {
 } from "./config.ts";
 
 import process from "node:process";
-import http from "node:http";
 import https from "node:https";
 
 import {
     readFile,
 } from "node:fs/promises";
 
+import {serve} from "@hono/node-server";
+
 import {
     useApp,
-} from "./init/express.ts";
+} from "./init/hono.ts";
 
 import {
     instanceRole,
@@ -29,18 +30,30 @@ import {
     camelToSnakeCase,
 } from "./utils/native.ts";
 
+import type {Hono} from "hono";
+import type {HonoEnv} from "./types/hono.ts";
+
+export interface ProtocolStatus {
+    protocol: string;
+    hostname: string;
+    port: number;
+}
+
 /**
  * Setup protocol - http
  * @param app - The application.
  * @returns The setup status.
  */
-function setupHttpProtocol(app) {
+function setupHttpProtocol(app: Hono<HonoEnv>): ProtocolStatus {
     const protocol = "http";
     const hostname = get("HTTP_HOSTNAME");
     const port = parseInt(get("HTTP_PORT"));
 
-    const httpServer = http.createServer({}, app);
-    httpServer.listen(port, hostname);
+    serve({
+        fetch: app.fetch,
+        port,
+        hostname,
+    });
 
     return {protocol, hostname, port};
 }
@@ -50,7 +63,7 @@ function setupHttpProtocol(app) {
  * @param app - The application.
  * @returns The setup status.
  */
-async function setupHttpsProtocol(app) {
+async function setupHttpsProtocol(app: Hono<HonoEnv>): Promise<ProtocolStatus> {
     const protocol = "https";
     const hostname = get("HTTPS_HOSTNAME");
     const port = parseInt(get("HTTPS_PORT"));
@@ -60,17 +73,32 @@ async function setupHttpsProtocol(app) {
         readFile(get("HTTPS_CERT_PATH")),
     ]);
 
-    const httpsServer = https.createServer({key, cert}, app);
-    httpsServer.listen(port, hostname);
+    serve({
+        fetch: app.fetch,
+        port,
+        hostname,
+        createServer: https.createServer,
+        serverOptions: {
+            key,
+            cert,
+        },
+    });
 
     return {protocol, hostname, port};
+}
+
+export interface AppInvoker {
+    loadRoutes: (routerNames: string[]) => AppInvoker;
+    loadInits: (initHandlers: VoidCallback[]) => AppInvoker;
+    loadExits: (exitHandlers: VoidCallback[]) => AppInvoker;
+    execute: () => Promise<ProtocolStatus[]>;
 }
 
 /**
  * Defines an application invoker.
  * @returns The application invoker.
  */
-export function invokeApp() {
+export function invokeApp(): AppInvoker {
     return {
         loadRoutes,
         loadInits,
@@ -84,34 +112,37 @@ export function invokeApp() {
  * @param routerNames - The names of the routers to load.
  * @returns The application invoker.
  */
-function loadRoutes(routerNames) {
+function loadRoutes(routerNames: string[]): AppInvoker {
     routerNames = routerNames.map(camelToSnakeCase);
 
     const routeDirectory = new URL("routes/", import.meta.url);
     const routeFilenames = routerNames.map(
-        (n) => new URL(`${n}.mjs`, routeDirectory),
+        (n) => new URL(`${n}.ts`, routeDirectory),
     );
 
-    const routerMappers = routeFilenames.map((n) => import(n));
-    routerMappers.forEach((c) => c.then((f) => f.default()));
+    const routerMappers = routeFilenames.map((n) => import(n.toString()));
+    routerMappers.forEach((c) => {
+        routePromises.push(c.then((f) => f.default()));
+    });
 
     // Return application invoker
     return invokeApp();
 }
 
-// Define initial promises
-const initPromises = [];
+// Define route promises
+const routePromises: Promise<void>[] = [];
 
-/**
- * @returns {Promise<void>|void}
- */
+// Define initial promises
+const initPromises: (Promise<void> | void)[] = [];
+
+export type VoidCallback = () => Promise<void> | void;
 
 /**
  * Load init application handlers.
  * @param initHandlers - The init signal handlers.
  * @returns The application invoker.
  */
-function loadInits(initHandlers) {
+function loadInits(initHandlers: VoidCallback[]): AppInvoker {
     // Primary instance won't setup any init handlers
     if (instanceRole === "primary") {
         // Return application invoker
@@ -122,7 +153,11 @@ function loadInits(initHandlers) {
     const promises = initHandlers.map((f) => f());
 
     // Push the initial handlers onto the preparing promises
-    initPromises.push(...promises);
+    promises.forEach((p) => {
+        if (p instanceof Promise) {
+            initPromises.push(p);
+        }
+    });
 
     // Return application invoker
     return invokeApp();
@@ -133,7 +168,7 @@ function loadInits(initHandlers) {
  * @param exitHandlers - The exit signal handlers.
  * @returns The application invoker.
  */
-function loadExits(exitHandlers) {
+function loadExits(exitHandlers: VoidCallback[]): AppInvoker {
     // Primary instance won't setup any exit handlers
     if (instanceRole === "primary") {
         // Return application invoker
@@ -150,7 +185,7 @@ function loadExits(exitHandlers) {
     };
 
     // Define exit signals
-    const exitSignals = [
+    const exitSignals: NodeJS.Signals[] = [
         "SIGINT",
         "SIGTERM",
         "SIGQUIT",
@@ -171,7 +206,7 @@ function loadExits(exitHandlers) {
  * when prepared protocols, empty array returned if
  * in cluster mode and primary instance.
  */
-async function execute() {
+async function execute(): Promise<ProtocolStatus[]> {
     // Setup cluster
     if (instanceRole === "primary") {
         setupClusterPrimary();
@@ -184,19 +219,19 @@ async function execute() {
     // Use application
     const app = useApp();
 
-    // Wait for all init promises resolved
-    await Promise.all(initPromises);
+    // Wait for all route loading and init promises resolved
+    await Promise.all([...routePromises, ...initPromises]);
 
     // Get enabled protocols
     const enabledProtocols = getSplitted("ENABLED_PROTOCOLS");
 
     // Define setup promises
-    const setupPromises = [];
+    const setupPromises: Promise<ProtocolStatus>[] = [];
 
     // Setup HTTP
     if (enabledProtocols.includes("http")) {
         setupPromises.push(
-            setupHttpProtocol(app),
+            Promise.resolve(setupHttpProtocol(app)),
         );
     }
 
@@ -208,8 +243,10 @@ async function execute() {
     }
 
     // Send application ready event
-    process.send("ready");
+    if (process.send) {
+        process.send("ready");
+    }
 
     // Return setup promises
-    return setupPromises;
+    return Promise.all(setupPromises);
 }

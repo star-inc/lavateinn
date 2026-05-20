@@ -17,12 +17,13 @@ import {
 
 // Import modules
 import {
+    getInstanceMode,
     getNodeEnv,
     getRuntimeEnv,
-    getInstanceMode,
 } from "./src/config.ts";
 import {
     invokeApp,
+    type ProtocolStatus,
 } from "./src/execute.ts";
 
 import {
@@ -66,7 +67,7 @@ const exitHandlers = [
 ];
 
 // Define display
-const displayStatus = (protocolStatus) => {
+const displayStatus = (protocolStatus: ProtocolStatus[]): void => {
     // Display the status of the application
     if (instanceRole !== "worker") {
         // Get node and runtime environment information.
@@ -84,7 +85,7 @@ const displayStatus = (protocolStatus) => {
     // Display the protocol status
     if (instanceRole === "single" || instanceContext.get("workerId") === 1) {
         // Define the view
-        const viewIt = ({protocol, hostname, port}) => {
+        const viewIt = ({protocol, hostname, port}: ProtocolStatus) => {
             console.info("----");
             console.info(`Protocol "${protocol}" is listening at`);
             console.info(`${protocol}://${hostname}:${port}`);

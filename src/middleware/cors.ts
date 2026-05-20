@@ -5,10 +5,12 @@
 
 // Import modules
 import {get} from "../config.ts";
-import cors from "cors";
+import {cors} from "hono/cors";
 
 // Read configuration
 const origin = get("CORS_ORIGIN");
 
 // Export (function)
-export default cors({origin});
+export default cors({
+    origin,
+});

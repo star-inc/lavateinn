@@ -54,23 +54,26 @@ const useLoggingFile = () => loggingFilePath &&
  * Composable logger.
  * @returns The logger.
  */
-export function useLogger() {
+export function useLogger(): winston.Logger {
     // Return the existing instance if exists
     if (instanceContext.has("Logger")) {
         return instanceContext.get("Logger");
     }
 
     // Create logger
-    const allTransports = [
-        useLoggingConsole(),
-        useLoggingHttp(),
-        useLoggingFile(),
-    ];
-
-    type ValidTransport = Exclude<typeof allTransports[number], false | "">;
-    const transports = allTransports.filter((t): t is ValidTransport => {
-        return t !== false && t !== "";
-    });
+    const transports: winston.transport[] = [];
+    const consoleTransport = useLoggingConsole();
+    if (consoleTransport) {
+        transports.push(consoleTransport);
+    }
+    const httpTransport = useLoggingHttp();
+    if (httpTransport) {
+        transports.push(httpTransport);
+    }
+    const fileTransport = useLoggingFile();
+    if (fileTransport) {
+        transports.push(fileTransport);
+    }
 
     const logger = winston.createLogger({
         transports,
